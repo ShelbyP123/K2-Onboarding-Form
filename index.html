@@ -1361,12 +1361,12 @@
   // ════════════════════════════════════════════════
   const SUPABASE_URL = 'YOUR_SUPABASE_URL';
   const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   // ── State variables ──
-  let clientType = '';       // 'corporate' or 'private'
-  let numDirectors = '';     // 'sole' or 'more'
-  let isDirector = '';       // 'yes' or 'no'
+  let clientType = '';
+  let numDirectors = '';
+  let isDirector = '';
   let numOwners = 0;
   let numUsers = 0;
 
@@ -1381,9 +1381,7 @@
   ];
 
   // ════════════════════════════════════════════════
-  // NAVIGATION — showScreen(id)
-  // Hides all screens, shows the one you want,
-  // scrolls to top, and updates the progress bar
+  // NAVIGATION
   // ════════════════════════════════════════════════
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1400,28 +1398,21 @@
   // ════════════════════════════════════════════════
   // CHOICE BUTTON HELPERS
   // ════════════════════════════════════════════════
-
-  // For Q1 — Corporate or Private
   function pickQ1(value) {
     clientType = value;
     document.getElementById('q1-corporate').classList.toggle('selected', value === 'corporate');
     document.getElementById('q1-private').classList.toggle('selected', value === 'private');
   }
 
-  // For any radio-style choice group (e.g. s5-director, s8-owners)
   function pickRadio(name, value) {
-    // Remove selected from all buttons in this group
     document.querySelectorAll('[id^="' + name + '-"]').forEach(btn => {
       btn.classList.remove('selected');
     });
-    // Add selected to the chosen button
     const chosen = document.getElementById(name + '-' + value);
     if (chosen) chosen.classList.add('selected');
 
-    // Store the value in our state variables
     if (name === 's5-director') {
       isDirector = value;
-      // Show/hide the "how many directors" question
       document.getElementById('s5-numdirectors-group').style.display =
         (value === 'yes') ? 'block' : 'none';
       if (value === 'no') numDirectors = '';
@@ -1433,7 +1424,6 @@
 
   // ════════════════════════════════════════════════
   // VALIDATION HELPER
-  // Checks that a field has a value; shows/hides error
   // ════════════════════════════════════════════════
   function validate(fieldId, errorId) {
     const el = document.getElementById(fieldId);
@@ -1455,10 +1445,7 @@
 
   // ════════════════════════════════════════════════
   // SECTION SUBMIT FUNCTIONS
-  // Each one validates required fields then
-  // routes to the correct next screen
   // ════════════════════════════════════════════════
-
   function submitQ1() {
     if (!clientType) {
       document.getElementById('q1-corporate').style.border = '1.5px solid #c0392b';
@@ -1503,14 +1490,12 @@
 
   function submitS5() {
     let ok = true;
-    // Validate director yes/no
     if (!isDirector) {
       document.getElementById('err-s5-director').style.display = 'block';
       ok = false;
     } else {
       hideErr('err-s5-director');
     }
-    // If yes, validate number of directors
     if (isDirector === 'yes' && !numDirectors) {
       document.getElementById('err-s5-numdirectors').style.display = 'block';
       ok = false;
@@ -1518,11 +1503,6 @@
       hideErr('err-s5-numdirectors');
     }
     if (!ok) return;
-
-    // Routing logic:
-    // Director = yes AND sole director → skip director details, go to S8
-    // Director = yes AND more than one → go to S6 (other director details)
-    // Director = no → go to S6 (director details needed)
     if (isDirector === 'yes' && numDirectors === 'sole') {
       showScreen('scr-s8');
     } else {
@@ -1538,9 +1518,6 @@
     ok = validate('s6-nationality','err-s6-nationality') && ok;
     ok = validate('s6-address','err-s6-address') && ok;
     if (!ok) return;
-
-    // If more than one director, go to S7 for second director
-    // Otherwise go to S8
     if (numDirectors === 'more') {
       showScreen('scr-s7');
     } else {
@@ -1559,7 +1536,6 @@
   }
 
   function goBackFromS8() {
-    // Back button on S8 depends on how we got here
     if (isDirector === 'yes' && numDirectors === 'sole') {
       showScreen('scr-s5');
     } else if (numDirectors === 'more') {
@@ -1570,12 +1546,11 @@
   }
 
   function submitS8() {
-    if (isNaN(numOwners) || document.querySelectorAll('[id^="s8-owners-"].selected').length === 0) {
+    if (document.querySelectorAll('[id^="s8-owners-"].selected').length === 0) {
       document.getElementById('err-s8-owners').style.display = 'block';
       return;
     }
     hideErr('err-s8-owners');
-    // Route based on number of beneficial owners
     if (numOwners === 0) showScreen('scr-s13');
     else showScreen('scr-s9');
   }
@@ -1671,7 +1646,6 @@
     ok = validate('s16-fundorigin','err-s16-fundorigin') && ok;
     ok = validate('s16-destination','err-s16-destination') && ok;
     ok = validate('s16-purpose','err-s16-purpose') && ok;
-    // Check at least one source of funds checkbox is ticked
     const sofChecked = ['s16-sof-business','s16-sof-savings','s16-sof-investment','s16-sof-assets','s16-sof-other']
       .some(id => document.getElementById(id).checked);
     if (!sofChecked) {
@@ -1726,7 +1700,7 @@
   }
 
   // ════════════════════════════════════════════════
-  // FINAL SUBMISSION — sends all data to Supabase
+  // FINAL SUBMISSION
   // ════════════════════════════════════════════════
   async function submitFinal() {
     const loadingEl = document.getElementById('submit-loading');
@@ -1734,7 +1708,6 @@
     loadingEl.style.display = 'block';
     errorEl.style.display = 'none';
 
-    // Gather source of funds
     function getSOF(prefix) {
       const items = [];
       if (document.getElementById(prefix+'-sof-business').checked) items.push('Business income');
@@ -1745,105 +1718,88 @@
       return items.join(', ');
     }
 
-    function val(id) {
+    function v(id) {
       const el = document.getElementById(id);
       return el ? (el.value || '').trim() : '';
     }
 
     const payload = {
-      client_type: clientType,
-
-      // Applicant (corporate path uses S2, private uses S3)
-      applicant_title:       clientType === 'corporate' ? val('s2-title') : val('s3-title'),
-      applicant_fullname:    clientType === 'corporate' ? val('s2-fullname') : val('s3-fullname'),
-      applicant_dob:         clientType === 'corporate' ? val('s2-dob') : val('s3-dob'),
-      applicant_nationality: clientType === 'corporate' ? val('s2-nationality') : val('s3-nationality'),
-      applicant_address:     clientType === 'corporate' ? val('s2-address') : val('s3-address'),
-      applicant_email:       clientType === 'corporate' ? val('s2-email') : val('s3-email'),
-      applicant_mobile:      clientType === 'corporate' ? val('s2-mobile') : val('s3-mobile'),
-
-      // Company (corporate only)
-      company_name:          val('s4-companyname'),
-      company_country:       val('s4-country'),
-      company_regnumber:     val('s4-regnumber'),
-      company_sector:        val('s4-sector'),
-      company_website:       val('s4-website'),
-
-      // Directors
+      client_type:           clientType,
+      applicant_title:       clientType === 'corporate' ? v('s2-title') : v('s3-title'),
+      applicant_fullname:    clientType === 'corporate' ? v('s2-fullname') : v('s3-fullname'),
+      applicant_dob:         clientType === 'corporate' ? v('s2-dob') : v('s3-dob'),
+      applicant_nationality: clientType === 'corporate' ? v('s2-nationality') : v('s3-nationality'),
+      applicant_address:     clientType === 'corporate' ? v('s2-address') : v('s3-address'),
+      applicant_email:       clientType === 'corporate' ? v('s2-email') : v('s3-email'),
+      applicant_mobile:      clientType === 'corporate' ? v('s2-mobile') : v('s3-mobile'),
+      company_name:          v('s4-companyname'),
+      company_country:       v('s4-country'),
+      company_regnumber:     v('s4-regnumber'),
+      company_sector:        v('s4-sector'),
+      company_website:       v('s4-website'),
       is_director:           isDirector,
       num_directors:         numDirectors,
-      director1_title:       val('s6-title'),
-      director1_fullname:    val('s6-fullname'),
-      director1_dob:         val('s6-dob'),
-      director1_nationality: val('s6-nationality'),
-      director1_address:     val('s6-address'),
-      director2_title:       val('s7-title'),
-      director2_fullname:    val('s7-fullname'),
-      director2_dob:         val('s7-dob'),
-      director2_nationality: val('s7-nationality'),
-      director2_address:     val('s7-address'),
-
-      // Beneficial owners
+      director1_title:       v('s6-title'),
+      director1_fullname:    v('s6-fullname'),
+      director1_dob:         v('s6-dob'),
+      director1_nationality: v('s6-nationality'),
+      director1_address:     v('s6-address'),
+      director2_title:       v('s7-title'),
+      director2_fullname:    v('s7-fullname'),
+      director2_dob:         v('s7-dob'),
+      director2_nationality: v('s7-nationality'),
+      director2_address:     v('s7-address'),
       num_beneficial_owners: numOwners,
-      owner1_title:          val('s9-title'),
-      owner1_fullname:       val('s9-fullname'),
-      owner1_dob:            val('s9-dob'),
-      owner1_nationality:    val('s9-nationality'),
-      owner1_address:        val('s9-address'),
-      owner1_shareholding:   val('s9-shareholding'),
-      owner2_title:          val('s10-title'),
-      owner2_fullname:       val('s10-fullname'),
-      owner2_dob:            val('s10-dob'),
-      owner2_nationality:    val('s10-nationality'),
-      owner2_address:        val('s10-address'),
-      owner2_shareholding:   val('s10-shareholding'),
-      owner3_title:          val('s11-title'),
-      owner3_fullname:       val('s11-fullname'),
-      owner3_dob:            val('s11-dob'),
-      owner3_nationality:    val('s11-nationality'),
-      owner3_address:        val('s11-address'),
-      owner3_shareholding:   val('s11-shareholding'),
-      owner4_title:          val('s12-title'),
-      owner4_fullname:       val('s12-fullname'),
-      owner4_dob:            val('s12-dob'),
-      owner4_nationality:    val('s12-nationality'),
-      owner4_address:        val('s12-address'),
-      owner4_shareholding:   val('s12-shareholding'),
-
-      // Additional users
+      owner1_title:          v('s9-title'),
+      owner1_fullname:       v('s9-fullname'),
+      owner1_dob:            v('s9-dob'),
+      owner1_nationality:    v('s9-nationality'),
+      owner1_address:        v('s9-address'),
+      owner1_shareholding:   v('s9-shareholding'),
+      owner2_title:          v('s10-title'),
+      owner2_fullname:       v('s10-fullname'),
+      owner2_dob:            v('s10-dob'),
+      owner2_nationality:    v('s10-nationality'),
+      owner2_address:        v('s10-address'),
+      owner2_shareholding:   v('s10-shareholding'),
+      owner3_title:          v('s11-title'),
+      owner3_fullname:       v('s11-fullname'),
+      owner3_dob:            v('s11-dob'),
+      owner3_nationality:    v('s11-nationality'),
+      owner3_address:        v('s11-address'),
+      owner3_shareholding:   v('s11-shareholding'),
+      owner4_title:          v('s12-title'),
+      owner4_fullname:       v('s12-fullname'),
+      owner4_dob:            v('s12-dob'),
+      owner4_nationality:    v('s12-nationality'),
+      owner4_address:        v('s12-address'),
+      owner4_shareholding:   v('s12-shareholding'),
       num_additional_users:  numUsers,
-      user1_title:           val('s14-title'),
-      user1_fullname:        val('s14-fullname'),
-      user1_dob:             val('s14-dob'),
-      user1_nationality:     val('s14-nationality'),
-      user1_email:           val('s14-email'),
-      user2_title:           val('s15-title'),
-      user2_fullname:        val('s15-fullname'),
-      user2_dob:             val('s15-dob'),
-      user2_nationality:     val('s15-nationality'),
-      user2_email:           val('s15-email'),
-
-      // Account usage
-      base_currency:         clientType === 'corporate' ? val('s16-basecurrency') : val('s17-basecurrency'),
-      currencies_to_trade:   clientType === 'corporate' ? val('s16-currencies') : val('s17-currencies'),
-      monthly_volume:        clientType === 'corporate' ? val('s16-monthlyvolume') : val('s17-monthlyvolume'),
-      tx_per_month:          clientType === 'corporate' ? val('s16-txcount') : val('s17-txcount'),
-      fund_origin:           clientType === 'corporate' ? val('s16-fundorigin') : val('s17-fundorigin'),
-      payment_destination:   clientType === 'corporate' ? val('s16-destination') : val('s17-destination'),
+      user1_title:           v('s14-title'),
+      user1_fullname:        v('s14-fullname'),
+      user1_dob:             v('s14-dob'),
+      user1_nationality:     v('s14-nationality'),
+      user1_email:           v('s14-email'),
+      user2_title:           v('s15-title'),
+      user2_fullname:        v('s15-fullname'),
+      user2_dob:             v('s15-dob'),
+      user2_nationality:     v('s15-nationality'),
+      user2_email:           v('s15-email'),
+      base_currency:         clientType === 'corporate' ? v('s16-basecurrency') : v('s17-basecurrency'),
+      currencies_to_trade:   clientType === 'corporate' ? v('s16-currencies') : v('s17-currencies'),
+      monthly_volume:        clientType === 'corporate' ? v('s16-monthlyvolume') : v('s17-monthlyvolume'),
+      tx_per_month:          clientType === 'corporate' ? v('s16-txcount') : v('s17-txcount'),
+      fund_origin:           clientType === 'corporate' ? v('s16-fundorigin') : v('s17-fundorigin'),
+      payment_destination:   clientType === 'corporate' ? v('s16-destination') : v('s17-destination'),
       source_of_funds:       clientType === 'corporate' ? getSOF('s16') : getSOF('s17'),
-      account_purpose:       clientType === 'corporate' ? val('s16-purpose') : val('s17-purpose'),
-
-      // Third party payments
-      third_party_details:   val('s18-thirdparty'),
-
-      // Terms accepted
+      account_purpose:       clientType === 'corporate' ? v('s16-purpose') : v('s17-purpose'),
+      third_party_details:   v('s18-thirdparty'),
       terms_accepted:        document.getElementById('s20-terms').checked,
-
       submitted_at:          new Date().toISOString()
     };
 
     try {
-      const { error } = await supabase.from('onboarding_submissions').insert([payload]);
+      const { error } = await dbClient.from('onboarding_submissions').insert([payload]);
       if (error) throw error;
       showScreen('scr-thankyou');
     } catch (err) {
