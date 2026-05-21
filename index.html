@@ -2,137 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>K2 FX Onboarding</title>
-
-  <!-- Supabase JavaScript client -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>K2 FX – Onboarding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
-    /* ===== RESET & BASE ===== */
+    /* ── RESET ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f5f0;
-      color: #1a1a1a;
+      font-family: 'Raleway', sans-serif;
+      background: #F1ECE2;
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 20px;
+      padding: 40px 16px 60px;
     }
 
-    /* ===== MAIN CARD ===== */
-    .form-wrapper {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    /* ── CARD ── */
+    .card {
+      background: #F1ECE2;
       width: 100%;
-      max-width: 640px;
+      max-width: 580px;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      height: 4px;
+      background: rgba(38,38,38,0.15);
+      border-radius: 2px;
+      margin-bottom: 40px;
       overflow: hidden;
     }
-
-    /* ===== PROGRESS BAR ===== */
-    .progress-bar-container {
-      background: #e8e8e8;
-      height: 5px;
-      width: 100%;
-    }
-    .progress-bar {
-      height: 5px;
-      background: #1a3c5e;
+    .progress-fill {
+      height: 4px;
+      background: #262626;
+      border-radius: 2px;
       transition: width 0.4s ease;
       width: 0%;
     }
 
-    /* ===== SECTIONS ===== */
-    .section {
-      display: none;
-      padding: 48px 40px 40px;
-      animation: fadeIn 0.3s ease;
-    }
-    .section.active { display: block; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+    /* ── SECTIONS ── */
+    .screen { display: none; animation: fadeUp 0.3s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ===== WELCOME SCREEN ===== */
-    .welcome-logo {
-      display: block;
-      max-width: 140px;
-      margin: 0 auto 28px;
+    /* ── WELCOME ── */
+    .welcome-wrap { text-align: center; padding: 20px 0 10px; }
+    .logo-svg { display: block; margin: 0 auto 28px; }
+    .welcome-wrap h1 {
+      font-size: 26px; font-weight: 700; color: #262626;
+      margin-bottom: 8px; letter-spacing: 0.3px;
     }
-    .welcome-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #1a3c5e;
-      text-align: center;
-      margin-bottom: 8px;
-    }
-    .welcome-subtitle {
-      font-size: 14px;
-      color: #555;
-      text-align: center;
-      margin-bottom: 36px;
+    .welcome-wrap p {
+      font-size: 14px; color: #555; margin-bottom: 36px; letter-spacing: 0.2px;
     }
 
-    /* ===== SECTION HEADER ===== */
+    /* ── SECTION HEADER ── */
     .section-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: #1a3c5e;
-      margin-bottom: 12px;
-      line-height: 1.3;
+      font-size: 22px; font-weight: 700; color: #262626;
+      margin-bottom: 14px; line-height: 1.35;
     }
     .section-desc {
-      font-size: 14px;
-      color: #555;
-      line-height: 1.7;
-      margin-bottom: 28px;
+      font-size: 14px; color: #555; line-height: 1.75;
+      margin-bottom: 30px;
     }
-    .section-desc p { margin-bottom: 8px; }
-    .section-desc p:last-child { margin-bottom: 0; }
+    .section-desc p + p { margin-top: 8px; }
 
-    /* ===== FORM FIELDS ===== */
-    .field {
-      margin-bottom: 22px;
-    }
+    /* ── FIELDS ── */
+    .field { margin-bottom: 22px; }
     .field label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
-      margin-bottom: 6px;
+      display: block; font-size: 14px; font-weight: 600;
+      color: #262626; margin-bottom: 7px;
     }
-    .field label .required { color: #c0392b; margin-left: 2px; }
-    .field .field-hint {
-      font-size: 12px;
-      color: #777;
-      margin-bottom: 6px;
-      line-height: 1.5;
+    .req { color: #c0392b; margin-left: 2px; }
+    .field-hint {
+      font-size: 12px; color: #777; margin-bottom: 6px; line-height: 1.5;
     }
-
-    .field input[type="text"],
-    .field input[type="email"],
-    .field input[type="tel"],
+    .field input[type=text],
+    .field input[type=email],
+    .field input[type=tel],
     .field textarea,
     .field select {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid #d0d0d0;
-      border-radius: 7px;
-      font-size: 15px;
-      color: #1a1a1a;
-      background: #fff;
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid rgba(38,38,38,0.3);
+      border-radius: 6px; font-size: 15px;
+      font-family: 'Raleway', sans-serif;
+      color: #262626; background: rgba(255,255,255,0.55);
       transition: border-color 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
+      appearance: none; -webkit-appearance: none;
     }
     .field select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23555' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M0 0l5.5 7L11 0z' fill='%23262626'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
       padding-right: 36px;
@@ -140,218 +106,174 @@
     .field input:focus,
     .field textarea:focus,
     .field select:focus {
-      outline: none;
-      border-color: #1a3c5e;
+      outline: none; border-color: #262626;
     }
-    .field textarea { resize: vertical; min-height: 90px; }
+    .field textarea { resize: vertical; min-height: 88px; }
 
-    /* Date of birth row */
-    .dob-row {
-      display: flex;
-      gap: 10px;
-    }
-    .dob-row input {
-      flex: 1;
-      text-align: center;
-    }
-    .dob-row .dob-sep {
-      display: flex;
-      align-items: center;
-      font-weight: 600;
-      color: #999;
-      font-size: 18px;
-    }
+    /* DOB row */
+    .dob-row { display: flex; align-items: center; gap: 8px; }
+    .dob-row input { flex: 1; text-align: center; }
+    .dob-sep { color: #888; font-weight: 600; font-size: 18px; }
 
-    /* ===== MULTIPLE CHOICE (Radio style) ===== */
-    .choice-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .choice-item {
-      display: flex;
-      align-items: center;
+    /* ── CHOICE BUTTONS ── */
+    .choice-list { display: flex; flex-direction: column; gap: 10px; }
+    .choice-btn {
+      display: flex; align-items: center; gap: 12px;
       padding: 13px 16px;
-      border: 1.5px solid #d0d0d0;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      gap: 12px;
+      border: 1.5px solid rgba(38,38,38,0.3);
+      border-radius: 6px; cursor: pointer;
+      background: rgba(255,255,255,0.45);
+      transition: border-color 0.15s, background 0.15s;
+      font-family: 'Raleway', sans-serif;
     }
-    .choice-item:hover { border-color: #1a3c5e; background: #f0f4f8; }
-    .choice-item.selected { border-color: #1a3c5e; background: #f0f4f8; }
-    .choice-item input[type="radio"],
-    .choice-item input[type="checkbox"] { accent-color: #1a3c5e; width: 17px; height: 17px; }
-    .choice-label { font-size: 15px; color: #1a1a1a; }
+    .choice-btn:hover { border-color: #262626; background: rgba(255,255,255,0.7); }
+    .choice-btn.selected { border-color: #262626; background: rgba(255,255,255,0.7); }
+    .choice-btn input[type=radio],
+    .choice-btn input[type=checkbox] {
+      accent-color: #262626; width: 17px; height: 17px; flex-shrink: 0;
+    }
+    .choice-label { font-size: 15px; color: #262626; font-weight: 500; }
 
-    /* Multiple select (checkboxes for source of funds) */
+    /* Multi-select checkboxes (source of funds) */
     .check-list { display: flex; flex-direction: column; gap: 10px; }
 
-    /* ===== BUTTONS ===== */
+    /* ── BUTTONS ── */
     .btn-primary {
       display: inline-block;
-      background: #1a3c5e;
-      color: #fff;
-      border: none;
-      padding: 14px 36px;
-      border-radius: 7px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
+      background: #262626; color: #fff;
+      border: none; border-radius: 6px;
+      padding: 13px 38px;
+      font-size: 15px; font-weight: 700;
+      font-family: 'Raleway', sans-serif;
+      cursor: pointer; letter-spacing: 0.3px;
       transition: background 0.2s, transform 0.1s;
-      margin-top: 10px;
-    }
-    .btn-primary:hover { background: #12294a; }
-    .btn-primary:active { transform: scale(0.98); }
-
-    .btn-back {
-      background: none;
-      border: none;
-      color: #1a3c5e;
-      font-size: 14px;
-      cursor: pointer;
-      padding: 0;
-      margin-top: 18px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      text-decoration: underline;
-    }
-    .btn-back:hover { color: #12294a; }
-
-    .btn-row {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
       margin-top: 8px;
     }
+    .btn-primary:hover { background: #111; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { background: #888; cursor: not-allowed; }
 
-    /* ===== CHECKBOX AGREEMENT ===== */
-    .agreement-text {
-      font-size: 13px;
-      color: #444;
-      line-height: 1.7;
-      background: #f8f8f5;
-      border: 1px solid #e0e0d8;
-      border-radius: 7px;
-      padding: 18px;
-      margin-bottom: 18px;
-      max-height: 260px;
-      overflow-y: auto;
+    .btn-back {
+      background: none; border: none;
+      color: #555; font-size: 13px;
+      font-family: 'Raleway', sans-serif;
+      cursor: pointer; margin-top: 14px;
+      display: inline-flex; align-items: center; gap: 4px;
+      text-decoration: underline; padding: 0;
     }
-    .agreement-text a { color: #1a3c5e; }
-    .agreement-check-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-    .agreement-check-row input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      accent-color: #1a3c5e;
-      flex-shrink: 0;
-    }
-    .agreement-check-row label { font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-back:hover { color: #262626; }
 
-    /* ===== FILE UPLOAD ===== */
-    .file-upload-box {
-      border: 2px dashed #c0c0c0;
-      border-radius: 7px;
-      padding: 32px 20px;
-      text-align: center;
-      color: #777;
-      cursor: pointer;
-      transition: border-color 0.2s;
-      position: relative;
-    }
-    .file-upload-box:hover { border-color: #1a3c5e; }
-    .file-upload-box input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-    }
-    .file-upload-box .upload-icon { font-size: 32px; margin-bottom: 8px; }
-    .file-upload-box p { font-size: 14px; }
-    .file-upload-box .upload-hint { font-size: 12px; color: #aaa; margin-top: 4px; }
-    #uploadFileName { font-size: 13px; color: #1a3c5e; margin-top: 8px; }
+    .btn-row { display: flex; flex-direction: column; align-items: flex-start; }
 
-    /* ===== VALIDATION ERRORS ===== */
+    /* ── VALIDATION ── */
     .field-error {
-      font-size: 12px;
-      color: #c0392b;
-      margin-top: 4px;
-      display: none;
+      font-size: 12px; color: #c0392b;
+      margin-top: 5px; display: none;
     }
-    .field.has-error input,
-    .field.has-error textarea,
-    .field.has-error select {
-      border-color: #c0392b;
+    .has-error input, .has-error textarea, .has-error select {
+      border-color: #c0392b !important;
     }
-    .field.has-error .field-error { display: block; }
+    .has-error .field-error { display: block; }
+    .form-error-msg {
+      background: #fdecea; border: 1px solid #f5c6c4;
+      color: #c0392b; padding: 12px 16px; border-radius: 6px;
+      font-size: 13px; margin-bottom: 16px; display: none;
+    }
 
-    /* ===== THANK YOU SCREEN ===== */
-    .thank-you {
-      text-align: center;
-      padding: 60px 40px;
+    /* ── TERMS BOX ── */
+    .terms-box {
+      font-size: 13px; color: #444; line-height: 1.75;
+      background: rgba(255,255,255,0.5);
+      border: 1.5px solid rgba(38,38,38,0.2);
+      border-radius: 6px; padding: 18px;
+      max-height: 240px; overflow-y: auto;
+      margin-bottom: 18px;
     }
-    .thank-you .ty-icon { font-size: 52px; margin-bottom: 20px; }
-    .thank-you h2 { font-size: 26px; font-weight: 700; color: #1a3c5e; margin-bottom: 14px; }
-    .thank-you p { font-size: 15px; color: #555; line-height: 1.7; }
-
-    /* ===== LOADING SPINNER ===== */
-    .spinner {
-      display: inline-block;
-      width: 18px; height: 18px;
-      border: 3px solid rgba(255,255,255,0.4);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-right: 8px;
-      vertical-align: middle;
+    .terms-box a { color: #262626; }
+    .terms-accept {
+      display: flex; align-items: flex-start; gap: 10px; margin-bottom: 22px;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .terms-accept input[type=checkbox] {
+      width: 18px; height: 18px; margin-top: 2px;
+      accent-color: #262626; flex-shrink: 0;
+    }
+    .terms-accept label { font-size: 14px; font-weight: 600; cursor: pointer; color: #262626; }
 
-    /* ===== MOBILE ===== */
-    @media (max-width: 600px) {
-      .section { padding: 32px 22px 28px; }
+    /* ── FILE UPLOAD ── */
+    .upload-box {
+      position: relative; border: 2px dashed rgba(38,38,38,0.3);
+      border-radius: 6px; padding: 30px 20px;
+      text-align: center; color: #777;
+      background: rgba(255,255,255,0.45);
+      cursor: pointer; transition: border-color 0.2s;
+    }
+    .upload-box:hover { border-color: #262626; }
+    .upload-box input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
+    }
+    .upload-box .upload-icon { font-size: 30px; margin-bottom: 8px; }
+    .upload-box p { font-size: 14px; }
+    .upload-box .upload-hint { font-size: 12px; color: #aaa; margin-top: 4px; }
+    #uploadFileName { font-size: 13px; color: #262626; margin-top: 8px; font-weight: 600; }
+
+    /* ── THANK YOU ── */
+    .thankyou-wrap { text-align: center; padding: 40px 20px; }
+    .thankyou-wrap .ty-tick { font-size: 50px; margin-bottom: 20px; }
+    .thankyou-wrap h2 {
+      font-size: 24px; font-weight: 700; color: #262626; margin-bottom: 14px;
+    }
+    .thankyou-wrap p { font-size: 15px; color: #555; line-height: 1.75; }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid rgba(38,38,38,0.12); margin: 28px 0; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 560px) {
+      body { padding: 24px 14px 48px; }
       .section-title { font-size: 19px; }
-      .welcome-title { font-size: 24px; }
-      .dob-row { gap: 6px; }
+      .welcome-wrap h1 { font-size: 22px; }
+      .dob-row gap: 6px; }
     }
   </style>
 </head>
 
 <body>
-<div class="form-wrapper">
-  <!-- Progress bar -->
-  <div class="progress-bar-container">
-    <div class="progress-bar" id="progressBar"></div>
+<div class="card">
+
+  <!-- Progress bar (hidden on welcome) -->
+  <div class="progress-wrap" id="progressWrap" style="display:none;">
+    <div class="progress-fill" id="progressFill"></div>
   </div>
 
-  <!-- ============================================================
+  <!-- ════════════════════════════════════════════
        WELCOME SCREEN
-  ============================================================ -->
-  <div class="section active" id="screen-welcome">
-    <div style="text-align:center;">
-      <!-- K2 FX logo / wordmark -->
-      <div style="margin-bottom:28px;">
-        <span style="font-size:36px;font-weight:800;letter-spacing:2px;color:#1a3c5e;">K 2</span><br>
-        <span style="font-size:13px;letter-spacing:6px;color:#888;font-weight:500;">F &nbsp; X</span>
-      </div>
-      <h1 class="welcome-title">Welcome to K2 FX</h1>
-      <p class="welcome-subtitle">Solutions to life's complex situations</p>
-      <button class="btn-primary" onclick="goTo('screen-s1')">Start</button>
+  ════════════════════════════════════════════ -->
+  <div class="screen active" id="scr-welcome">
+    <div class="welcome-wrap">
+
+      <!-- K2 FX Mountain Logo (SVG) -->
+      <svg class="logo-svg" width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Mountains -->
+        <path d="M100 20 L60 90 L140 90 Z" fill="#262626"/>
+        <path d="M60 90 L20 90 L55 45 Z" fill="#262626" opacity="0.85"/>
+        <path d="M140 90 L180 90 L145 45 Z" fill="#262626" opacity="0.85"/>
+        <path d="M15 90 L185 90" stroke="#262626" stroke-width="2"/>
+        <!-- K2 text -->
+        <text x="100" y="118" text-anchor="middle" font-family="Raleway, sans-serif" font-size="22" font-weight="800" fill="#262626" letter-spacing="6">K 2</text>
+        <!-- FX text -->
+        <text x="100" y="136" text-anchor="middle" font-family="Raleway, sans-serif" font-size="11" font-weight="500" fill="#262626" letter-spacing="8">F  X</text>
+      </svg>
+
+      <h1>Welcome to K2 FX</h1>
+      <p>Solutions to life's complex situations</p>
+      <button class="btn-primary" onclick="showScreen('scr-s1')">Start</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       S1 — INTRODUCTION STATEMENT
-  ============================================================ -->
-  <div class="section" id="screen-s1">
+  <!-- ════════════════════════════════════════════
+       S1 – INTRODUCTION
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s1">
     <h2 class="section-title">Welcome to K2 FX</h2>
     <div class="section-desc">
       <p>Thank you for taking the time to complete our onboarding form.</p>
@@ -361,357 +283,343 @@
       <p>Our team will review your application and follow up if we need anything further.</p>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="goTo('screen-q1')">Continue</button>
+      <button class="btn-primary" onclick="showScreen('scr-q1')">Continue</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       QUESTION 1 — CLIENT TYPE
-  ============================================================ -->
-  <div class="section" id="screen-q1">
-    <h2 class="section-title">What type of client are you onboarding as?<span class="required">*</span></h2>
-    <div class="choice-list" id="q1-choices">
-      <label class="choice-item" onclick="selectChoice('q1','corporate')">
-        <input type="radio" name="q1" value="corporate" id="q1-corporate"> <span class="choice-label">Corporate Client</span>
-      </label>
-      <label class="choice-item" onclick="selectChoice('q1','private')">
-        <input type="radio" name="q1" value="private" id="q1-private"> <span class="choice-label">Private Client</span>
-      </label>
+  <!-- ════════════════════════════════════════════
+       Q1 – CLIENT TYPE
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-q1">
+    <h2 class="section-title">What type of client are you onboarding as?<span class="req">*</span></h2>
+    <div class="choice-list" style="margin-bottom:28px;">
+      <div class="choice-btn" id="q1-corp-btn" onclick="pickQ1('corporate')">
+        <input type="radio" name="q1" id="q1-corp" value="corporate"> <span class="choice-label">Corporate Client</span>
+      </div>
+      <div class="choice-btn" id="q1-priv-btn" onclick="pickQ1('private')">
+        <input type="radio" name="q1" id="q1-priv" value="private"> <span class="choice-label">Private Client</span>
+      </div>
     </div>
-    <div class="btn-row" style="margin-top:24px;">
-      <button class="btn-primary" onclick="handleQ1()">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-s1')">&#8592; Back</button>
+    <div id="q1-error" class="form-error-msg">Please select a client type.</div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="submitQ1()">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-s1')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 2 — APPLICANT DETAILS (CORPORATE)
-  ============================================================ -->
-  <div class="section" id="screen-s2">
+  <!-- ════════════════════════════════════════════
+       S2 – APPLICANT DETAILS (CORPORATE)
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s2">
     <h2 class="section-title">Applicant Details (Corporate)</h2>
     <div class="section-desc">
       <p>We'll start with a few personal details about the main applicant.</p>
       <p>This should be the individual completing this form and acting as our primary point of contact for the business.</p>
     </div>
-
     <div class="field" id="f-s2-title">
-      <label>Title <span class="required">*</span></label>
-      <select id="s2-title"><option value="">Select...</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
+      <label>Title<span class="req">*</span></label>
+      <select id="s2-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
       <span class="field-error">Please select a title.</span>
     </div>
     <div class="field" id="f-s2-name">
-      <label>Full legal name <span class="required">*</span></label>
+      <label>Full legal name<span class="req">*</span></label>
       <input type="text" id="s2-name" placeholder="e.g. John Alexander Smith">
       <span class="field-error">Please enter your full legal name.</span>
     </div>
     <div class="field" id="f-s2-dob">
-      <label>Date of birth <span class="required">*</span></label>
+      <label>Date of birth<span class="req">*</span></label>
       <div class="dob-row">
-        <input type="text" id="s2-dob-d" placeholder="DD" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s2-dd" placeholder="DD" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s2-dob-m" placeholder="MM" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s2-mm" placeholder="MM" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s2-dob-y" placeholder="YYYY" maxlength="4" style="max-width:90px;">
+        <input type="text" id="s2-yyyy" placeholder="YYYY" maxlength="4">
       </div>
       <span class="field-error">Please enter a valid date of birth.</span>
     </div>
-    <div class="field" id="f-s2-nationality">
-      <label>Nationality <span class="required">*</span></label>
-      <input type="text" id="s2-nationality" placeholder="e.g. British">
+    <div class="field" id="f-s2-nat">
+      <label>Nationality<span class="req">*</span></label>
+      <input type="text" id="s2-nat" placeholder="e.g. British">
       <span class="field-error">Please enter your nationality.</span>
     </div>
-    <div class="field" id="f-s2-address">
-      <label>Residential address <span class="required">*</span></label>
-      <textarea id="s2-address" placeholder="Enter your full residential address"></textarea>
+    <div class="field" id="f-s2-addr">
+      <label>Residential address<span class="req">*</span></label>
+      <textarea id="s2-addr" placeholder="Your full residential address"></textarea>
       <span class="field-error">Please enter your residential address.</span>
     </div>
     <div class="field" id="f-s2-email">
-      <label>Email address <span class="required">*</span></label>
+      <label>Email address<span class="req">*</span></label>
       <input type="email" id="s2-email" placeholder="name@example.com">
       <span class="field-error">Please enter a valid email address.</span>
     </div>
-    <div class="field" id="f-s2-mobile">
-      <label>Mobile number <span class="required">*</span></label>
-      <input type="tel" id="s2-mobile" placeholder="+44 7400 123456">
+    <div class="field" id="f-s2-mob">
+      <label>Mobile number<span class="req">*</span></label>
+      <input type="tel" id="s2-mob" placeholder="+44 7400 123456">
       <span class="field-error">Please enter your mobile number.</span>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="validateAndGo('s2', 'screen-s4')">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-q1')">&#8592; Back</button>
+      <button class="btn-primary" onclick="validateSection('s2', ['s2-title','s2-name','s2-dob','s2-nat','s2-addr','s2-email','s2-mob'], 'scr-s4')">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-q1')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 3 — APPLICANT DETAILS (PRIVATE CLIENT)
-  ============================================================ -->
-  <div class="section" id="screen-s3">
+  <!-- ════════════════════════════════════════════
+       S3 – APPLICANT DETAILS (PRIVATE CLIENT)
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s3">
     <h2 class="section-title">Applicant Details (Private Client)</h2>
     <div class="section-desc">
-      <p>We'll start with a few personal details about you.</p>
-      <p>This should be the individual completing this form, who will be the primary account holder.</p>
+      <p>We'll start with a few personal details about you, as the primary account holder.</p>
     </div>
-
     <div class="field" id="f-s3-title">
-      <label>Title <span class="required">*</span></label>
-      <select id="s3-title"><option value="">Select...</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
+      <label>Title<span class="req">*</span></label>
+      <select id="s3-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
       <span class="field-error">Please select a title.</span>
     </div>
     <div class="field" id="f-s3-name">
-      <label>Full legal name <span class="required">*</span></label>
+      <label>Full legal name<span class="req">*</span></label>
       <input type="text" id="s3-name" placeholder="e.g. John Alexander Smith">
       <span class="field-error">Please enter your full legal name.</span>
     </div>
     <div class="field" id="f-s3-dob">
-      <label>Date of birth <span class="required">*</span></label>
+      <label>Date of birth<span class="req">*</span></label>
       <div class="dob-row">
-        <input type="text" id="s3-dob-d" placeholder="DD" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s3-dd" placeholder="DD" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s3-dob-m" placeholder="MM" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s3-mm" placeholder="MM" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s3-dob-y" placeholder="YYYY" maxlength="4" style="max-width:90px;">
+        <input type="text" id="s3-yyyy" placeholder="YYYY" maxlength="4">
       </div>
       <span class="field-error">Please enter a valid date of birth.</span>
     </div>
-    <div class="field" id="f-s3-nationality">
-      <label>Nationality <span class="required">*</span></label>
-      <input type="text" id="s3-nationality" placeholder="e.g. British">
+    <div class="field" id="f-s3-nat">
+      <label>Nationality<span class="req">*</span></label>
+      <input type="text" id="s3-nat" placeholder="e.g. British">
       <span class="field-error">Please enter your nationality.</span>
     </div>
-    <div class="field" id="f-s3-address">
-      <label>Residential address <span class="required">*</span></label>
-      <textarea id="s3-address" placeholder="Enter your full residential address"></textarea>
+    <div class="field" id="f-s3-addr">
+      <label>Residential address<span class="req">*</span></label>
+      <textarea id="s3-addr" placeholder="Your full residential address"></textarea>
       <span class="field-error">Please enter your residential address.</span>
     </div>
     <div class="field" id="f-s3-email">
-      <label>Email address <span class="required">*</span></label>
+      <label>Email address<span class="req">*</span></label>
       <input type="email" id="s3-email" placeholder="name@example.com">
       <span class="field-error">Please enter a valid email address.</span>
     </div>
-    <div class="field" id="f-s3-mobile">
-      <label>Mobile number <span class="required">*</span></label>
-      <input type="tel" id="s3-mobile" placeholder="+44 7400 123456">
+    <div class="field" id="f-s3-mob">
+      <label>Mobile number<span class="req">*</span></label>
+      <input type="tel" id="s3-mob" placeholder="+44 7400 123456">
       <span class="field-error">Please enter your mobile number.</span>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="validateAndGo('s3', 'screen-s17')">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-q1')">&#8592; Back</button>
+      <button class="btn-primary" onclick="validateSection('s3', ['s3-title','s3-name','s3-dob','s3-nat','s3-addr','s3-email','s3-mob'], 'scr-s17')">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-q1')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 4 — COMPANY DETAILS
-  ============================================================ -->
-  <div class="section" id="screen-s4">
+  <!-- ════════════════════════════════════════════
+       S4 – COMPANY DETAILS
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s4">
     <h2 class="section-title">Company Details</h2>
     <div class="section-desc">
       <p>Next, we'll ask for some basic information about the business itself.</p>
       <p>This allows us to identify the company correctly and understand the nature of its activity.</p>
     </div>
-
-    <div class="field" id="f-s4-compname">
-      <label>Registered company name <span class="required">*</span></label>
-      <input type="text" id="s4-compname" placeholder="e.g. Acme Holdings Ltd">
+    <div class="field" id="f-s4-cn">
+      <label>Registered company name<span class="req">*</span></label>
+      <input type="text" id="s4-cn" placeholder="e.g. Acme Holdings Ltd">
       <span class="field-error">Please enter the registered company name.</span>
     </div>
-    <div class="field" id="f-s4-country">
-      <label>Country of incorporation <span class="required">*</span></label>
-      <input type="text" id="s4-country" placeholder="e.g. United Kingdom">
+    <div class="field" id="f-s4-ci">
+      <label>Country of incorporation<span class="req">*</span></label>
+      <input type="text" id="s4-ci" placeholder="e.g. United Kingdom">
       <span class="field-error">Please enter the country of incorporation.</span>
     </div>
-    <div class="field" id="f-s4-regno">
-      <label>Company registration number <span class="required">*</span></label>
+    <div class="field" id="f-s4-rn">
+      <label>Company registration number<span class="req">*</span></label>
       <div class="field-hint">If no registration number, please provide the date of incorporation and the registered office address.</div>
-      <textarea id="s4-regno" placeholder="e.g. 12345678"></textarea>
+      <textarea id="s4-rn" placeholder="e.g. 12345678"></textarea>
       <span class="field-error">Please complete this field.</span>
     </div>
-    <div class="field" id="f-s4-sector">
-      <label>Business sector and type of activity <span class="required">*</span></label>
-      <textarea id="s4-sector" placeholder="e.g. Financial services — foreign exchange brokerage"></textarea>
+    <div class="field" id="f-s4-bs">
+      <label>Business sector and type of activity<span class="req">*</span></label>
+      <textarea id="s4-bs" placeholder="e.g. Financial services – foreign exchange brokerage"></textarea>
       <span class="field-error">Please describe your business sector and activity.</span>
     </div>
     <div class="field">
       <label>Company website (if applicable)</label>
-      <input type="text" id="s4-website" placeholder="e.g. https://www.yourcompany.com">
+      <input type="text" id="s4-web" placeholder="e.g. https://www.yourcompany.com">
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="validateAndGo('s4', 'screen-s5')">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-s2')">&#8592; Back</button>
+      <button class="btn-primary" onclick="validateSection('s4', ['s4-cn','s4-ci','s4-rn','s4-bs'], 'scr-s5')">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-s2')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 5 — DIRECTORS
-  ============================================================ -->
-  <div class="section" id="screen-s5">
+  <!-- ════════════════════════════════════════════
+       S5 – DIRECTORS
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s5">
     <h2 class="section-title">Directors</h2>
     <div class="section-desc">
       <p>We now need to confirm the company's directors.</p>
       <p>Depending on your company structure, we may require details for one or more directors. If you are a sole director, you'll be able to confirm that here.</p>
     </div>
-
     <div class="field" id="f-s5-isdir">
-      <label>Are you a registered company director? <span class="required">*</span></label>
+      <label>Are you a registered company director?<span class="req">*</span></label>
       <div class="choice-list">
-        <label class="choice-item" onclick="selectChoice('s5dir','yes')">
-          <input type="radio" name="s5dir" value="yes" id="s5dir-yes"> <span class="choice-label">Yes</span>
-        </label>
-        <label class="choice-item" onclick="selectChoice('s5dir','no')">
-          <input type="radio" name="s5dir" value="no" id="s5dir-no"> <span class="choice-label">No</span>
-        </label>
+        <div class="choice-btn" id="s5dir-yes-btn" onclick="pickRadio('s5dir','yes')">
+          <input type="radio" name="s5dir" value="yes" id="s5dir-yes"><span class="choice-label">Yes</span>
+        </div>
+        <div class="choice-btn" id="s5dir-no-btn" onclick="pickRadio('s5dir','no')">
+          <input type="radio" name="s5dir" value="no" id="s5dir-no"><span class="choice-label">No</span>
+        </div>
       </div>
-      <span class="field-error">Please select an option.</span>
+      <span class="field-error" id="s5-err1">Please select an option.</span>
     </div>
-
-    <div class="field" id="f-s5-howmany">
-      <label>How many directors does the company have? <span class="required">*</span></label>
+    <div class="field" id="f-s5-num">
+      <label>How many directors does the company have?<span class="req">*</span></label>
       <div class="choice-list">
-        <label class="choice-item" onclick="selectChoice('s5num','sole')">
-          <input type="radio" name="s5num" value="sole" id="s5num-sole"> <span class="choice-label">Sole director</span>
-        </label>
-        <label class="choice-item" onclick="selectChoice('s5num','more')">
-          <input type="radio" name="s5num" value="more" id="s5num-more"> <span class="choice-label">More than One</span>
-        </label>
+        <div class="choice-btn" id="s5num-sole-btn" onclick="pickRadio('s5num','sole')">
+          <input type="radio" name="s5num" value="sole" id="s5num-sole"><span class="choice-label">Sole director</span>
+        </div>
+        <div class="choice-btn" id="s5num-more-btn" onclick="pickRadio('s5num','more')">
+          <input type="radio" name="s5num" value="more" id="s5num-more"><span class="choice-label">More than one</span>
+        </div>
       </div>
-      <span class="field-error">Please select an option.</span>
+      <span class="field-error" id="s5-err2">Please select an option.</span>
     </div>
-
+    <div id="s5-form-err" class="form-error-msg">Please answer both questions above.</div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="handleS5()">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-s4')">&#8592; Back</button>
+      <button class="btn-primary" onclick="submitS5()">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-s4')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 6 — DIRECTOR DETAILS 1
-  ============================================================ -->
-  <div class="section" id="screen-s6">
+  <!-- ════════════════════════════════════════════
+       S6 – DIRECTOR DETAILS 1
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s6">
     <h2 class="section-title">Director Details</h2>
     <div class="section-desc">
       <p>We usually need details for two company directors.</p>
       <p>If you are a director, please give details for one other director.</p>
       <p>If you selected "sole director" and that person is not you, please enter their details here.</p>
     </div>
-
     <div class="field" id="f-s6-title">
-      <label>Title <span class="required">*</span></label>
-      <select id="s6-title"><option value="">Select...</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
+      <label>Title<span class="req">*</span></label>
+      <select id="s6-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
       <span class="field-error">Please select a title.</span>
     </div>
     <div class="field" id="f-s6-name">
-      <label>Full name <span class="required">*</span></label>
+      <label>Full name<span class="req">*</span></label>
       <input type="text" id="s6-name" placeholder="Director's full name">
       <span class="field-error">Please enter the director's full name.</span>
     </div>
     <div class="field" id="f-s6-dob">
-      <label>Date of birth <span class="required">*</span></label>
+      <label>Date of birth<span class="req">*</span></label>
       <div class="dob-row">
-        <input type="text" id="s6-dob-d" placeholder="DD" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s6-dd" placeholder="DD" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s6-dob-m" placeholder="MM" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s6-mm" placeholder="MM" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s6-dob-y" placeholder="YYYY" maxlength="4" style="max-width:90px;">
+        <input type="text" id="s6-yyyy" placeholder="YYYY" maxlength="4">
       </div>
       <span class="field-error">Please enter a valid date of birth.</span>
     </div>
-    <div class="field" id="f-s6-nationality">
-      <label>Nationality <span class="required">*</span></label>
-      <input type="text" id="s6-nationality" placeholder="e.g. British">
-      <span class="field-error">Please enter the director's nationality.</span>
+    <div class="field" id="f-s6-nat">
+      <label>Nationality<span class="req">*</span></label>
+      <input type="text" id="s6-nat" placeholder="e.g. British">
+      <span class="field-error">Please enter their nationality.</span>
     </div>
-    <div class="field" id="f-s6-address">
-      <label>Residential address <span class="required">*</span></label>
-      <textarea id="s6-address" placeholder="Director's full residential address"></textarea>
-      <span class="field-error">Please enter the director's residential address.</span>
+    <div class="field" id="f-s6-addr">
+      <label>Residential address<span class="req">*</span></label>
+      <textarea id="s6-addr" placeholder="Director's full residential address"></textarea>
+      <span class="field-error">Please enter their residential address.</span>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="handleS6()">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-s5')">&#8592; Back</button>
+      <button class="btn-primary" onclick="submitS6()">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-s5')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 7 — DIRECTOR DETAILS 2
-  ============================================================ -->
-  <div class="section" id="screen-s7">
+  <!-- ════════════════════════════════════════════
+       S7 – DIRECTOR DETAILS 2
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s7">
     <h2 class="section-title">Director Details (Second Director)</h2>
     <div class="section-desc">
-      <p>We usually need details for two company directors.</p>
-      <p>If you are a director, please give details for one other director.</p>
-      <p>If you selected "sole director" and that person is not you, please enter their details here.</p>
+      <p>Please provide details for the second director.</p>
     </div>
-
     <div class="field" id="f-s7-title">
-      <label>Title <span class="required">*</span></label>
-      <select id="s7-title"><option value="">Select...</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
+      <label>Title<span class="req">*</span></label>
+      <select id="s7-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
       <span class="field-error">Please select a title.</span>
     </div>
     <div class="field" id="f-s7-name">
-      <label>Full name <span class="required">*</span></label>
+      <label>Full name<span class="req">*</span></label>
       <input type="text" id="s7-name" placeholder="Director's full name">
       <span class="field-error">Please enter the director's full name.</span>
     </div>
     <div class="field" id="f-s7-dob">
-      <label>Date of birth <span class="required">*</span></label>
+      <label>Date of birth<span class="req">*</span></label>
       <div class="dob-row">
-        <input type="text" id="s7-dob-d" placeholder="DD" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s7-dd" placeholder="DD" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s7-dob-m" placeholder="MM" maxlength="2" style="max-width:70px;">
+        <input type="text" id="s7-mm" placeholder="MM" maxlength="2">
         <span class="dob-sep">/</span>
-        <input type="text" id="s7-dob-y" placeholder="YYYY" maxlength="4" style="max-width:90px;">
+        <input type="text" id="s7-yyyy" placeholder="YYYY" maxlength="4">
       </div>
       <span class="field-error">Please enter a valid date of birth.</span>
     </div>
-    <div class="field" id="f-s7-nationality">
-      <label>Nationality <span class="required">*</span></label>
-      <input type="text" id="s7-nationality" placeholder="e.g. British">
-      <span class="field-error">Please enter the director's nationality.</span>
+    <div class="field" id="f-s7-nat">
+      <label>Nationality<span class="req">*</span></label>
+      <input type="text" id="s7-nat" placeholder="e.g. British">
+      <span class="field-error">Please enter their nationality.</span>
     </div>
-    <div class="field" id="f-s7-address">
-      <label>Residential address <span class="required">*</span></label>
-      <textarea id="s7-address" placeholder="Director's full residential address"></textarea>
-      <span class="field-error">Please enter the director's residential address.</span>
+    <div class="field" id="f-s7-addr">
+      <label>Residential address<span class="req">*</span></label>
+      <textarea id="s7-addr" placeholder="Director's full residential address"></textarea>
+      <span class="field-error">Please enter their residential address.</span>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="validateAndGo('s7', 'screen-s8')">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-s6')">&#8592; Back</button>
+      <button class="btn-primary" onclick="validateSection('s7', ['s7-title','s7-name','s7-dob','s7-nat','s7-addr'], 'scr-s8')">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-s6')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTION 8 — OWNERSHIP (BENEFICIAL OWNERS)
-  ============================================================ -->
-  <div class="section" id="screen-s8">
+  <!-- ════════════════════════════════════════════
+       S8 – OWNERSHIP / BENEFICIAL OWNERS
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s8">
     <h2 class="section-title">Ownership (Beneficial Owners)</h2>
     <div class="section-desc">
       <p>We also need to understand the ownership structure of the business.</p>
       <p>Specifically, we are required to identify any individuals who own twenty-five percent or more of the company. If there are no individuals above this threshold, you can simply confirm that.</p>
     </div>
-
-    <div class="field" id="f-s8-owners">
-      <label>How many individuals own 25% or more of the company? <span class="required">*</span></label>
+    <div class="field" id="f-s8-own">
+      <label>How many individuals own 25% or more of the company?<span class="req">*</span></label>
       <div class="choice-list">
-        <label class="choice-item" onclick="selectChoice('s8own','0')"><input type="radio" name="s8own" value="0"> <span class="choice-label">0</span></label>
-        <label class="choice-item" onclick="selectChoice('s8own','1')"><input type="radio" name="s8own" value="1"> <span class="choice-label">1</span></label>
-        <label class="choice-item" onclick="selectChoice('s8own','2')"><input type="radio" name="s8own" value="2"> <span class="choice-label">2</span></label>
-        <label class="choice-item" onclick="selectChoice('s8own','3')"><input type="radio" name="s8own" value="3"> <span class="choice-label">3</span></label>
-        <label class="choice-item" onclick="selectChoice('s8own','4')"><input type="radio" name="s8own" value="4"> <span class="choice-label">4</span></label>
+        <div class="choice-btn" onclick="pickRadio('s8own','0')"><input type="radio" name="s8own" value="0"><span class="choice-label">0</span></div>
+        <div class="choice-btn" onclick="pickRadio('s8own','1')"><input type="radio" name="s8own" value="1"><span class="choice-label">1</span></div>
+        <div class="choice-btn" onclick="pickRadio('s8own','2')"><input type="radio" name="s8own" value="2"><span class="choice-label">2</span></div>
+        <div class="choice-btn" onclick="pickRadio('s8own','3')"><input type="radio" name="s8own" value="3"><span class="choice-label">3</span></div>
+        <div class="choice-btn" onclick="pickRadio('s8own','4')"><input type="radio" name="s8own" value="4"><span class="choice-label">4</span></div>
       </div>
-      <span class="field-error">Please select an option.</span>
     </div>
+    <div id="s8-err" class="form-error-msg">Please select an option.</div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="handleS8()">Continue</button>
-      <button class="btn-back" onclick="goTo('screen-s5')">&#8592; Back</button>
+      <button class="btn-primary" onclick="submitS8()">Continue</button>
+      <button class="btn-back" onclick="showScreen('scr-s5')">&#8592; Back</button>
     </div>
   </div>
 
-  <!-- ============================================================
-       SECTIONS 9–12 — BENEFICIAL OWNERS 1–4
-  ============================================================ -->
-  <!-- Beneficial Owner 1 -->
-  <div class="section" id="screen-s9">
+  <!-- ════════════════════════════════════════════
+       S9 – BENEFICIAL OWNER 1
+  ════════════════════════════════════════════ -->
+  <div class="screen" id="scr-s9">
     <h2 class="section-title">Beneficial Owner 1</h2>
     <div class="section-desc"><p>Please provide details for the first individual who owns 25% or more of the company.</p></div>
-    <div class="field" id="f-s9-title"><label>Title <span class="required">*</span></label><select id="s9-title"><option value="">Select...</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select><span class="field-error">Please select a title.</span></div>
-    <div class="field" id="f-s9-name"><label>Full name <span class="required">*</span></label><input type="text" id="s9-name" placeholder="Full name"><span class="field-error">Please enter their full name.</span></div>
-    <div class="field" id="f-s9-dob"><label>Date of birth <span class="required">*</span></label><div class="dob-row"><input type="text" id="s9-dob-d" placeholder="DD" maxlength="2" style="max-width:70px;"><span class="dob-sep">/</span><input type="text" id="s9-dob-m" placeholder="MM" maxlength="2" style="max-width:70px;"><span class="dob-sep">/</span><input type="text" id="s9-dob-y" placeholder="YYYY" maxlength="4" style="max-width:90px;"></div><span class="field-error">Please enter a valid date of birth.</span></div>
-    <div class="field" id="f-s9-nationality"><label>Nationality <span class="required">*</span></label>
+    <div class="field" id="f-s9-title"><label>Title<span class="req">*</span></label><select id="s9-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option
