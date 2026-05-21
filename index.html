@@ -2,624 +2,1857 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>K2 FX – Onboarding</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K2 FX – Client Onboarding</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ── RESET ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Raleway', sans-serif;
-      background: #F1ECE2;
+      background-color: #F1ECE2;
+      color: #262626;
       min-height: 100vh;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 40px 16px 60px;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* ── CARD ── */
-    .card {
-      background: #F1ECE2;
+    #progress-bar-wrap {
+      position: fixed;
+      top: 0; left: 0;
       width: 100%;
-      max-width: 580px;
-    }
-
-    /* ── PROGRESS BAR ── */
-    .progress-wrap {
       height: 4px;
       background: rgba(38,38,38,0.15);
-      border-radius: 2px;
-      margin-bottom: 40px;
-      overflow: hidden;
+      z-index: 999;
     }
-    .progress-fill {
-      height: 4px;
+    #progress-bar {
+      height: 100%;
       background: #262626;
-      border-radius: 2px;
-      transition: width 0.4s ease;
       width: 0%;
+      transition: width 0.4s ease;
     }
 
-    /* ── SECTIONS ── */
-    .screen { display: none; animation: fadeUp 0.3s ease; }
-    .screen.active { display: block; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 680px;
+      padding: 60px 24px 80px;
+      min-height: 100vh;
+      flex-direction: column;
+      justify-content: center;
     }
+    .screen.active { display: flex; }
 
-    /* ── WELCOME ── */
-    .welcome-wrap { text-align: center; padding: 20px 0 10px; }
-    .logo-svg { display: block; margin: 0 auto 28px; }
-    .welcome-wrap h1 {
-      font-size: 26px; font-weight: 700; color: #262626;
-      margin-bottom: 8px; letter-spacing: 0.3px;
+    #scr-welcome {
+      align-items: center;
+      text-align: center;
     }
-    .welcome-wrap p {
-      font-size: 14px; color: #555; margin-bottom: 36px; letter-spacing: 0.2px;
-    }
+    #scr-welcome .logo-wrap { margin-bottom: 40px; }
+    #scr-welcome .logo-wrap img { width: 220px; max-width: 80vw; }
+    #scr-welcome h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+    #scr-welcome p { font-size: 1rem; opacity: 0.7; margin-bottom: 40px; }
 
-    /* ── SECTION HEADER ── */
-    .section-title {
-      font-size: 22px; font-weight: 700; color: #262626;
-      margin-bottom: 14px; line-height: 1.35;
-    }
-    .section-desc {
-      font-size: 14px; color: #555; line-height: 1.75;
-      margin-bottom: 30px;
-    }
-    .section-desc p + p { margin-top: 8px; }
+    .statement-screen h2 { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; line-height: 1.3; }
+    .statement-screen p { font-size: 1rem; line-height: 1.75; opacity: 0.8; margin-bottom: 36px; }
 
-    /* ── FIELDS ── */
-    .field { margin-bottom: 22px; }
-    .field label {
-      display: block; font-size: 14px; font-weight: 600;
-      color: #262626; margin-bottom: 7px;
+    .section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .section-desc { font-size: 0.95rem; line-height: 1.7; opacity: 0.75; margin-bottom: 36px; }
+
+    .field-group { margin-bottom: 24px; }
+    .field-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      opacity: 0.6;
     }
-    .req { color: #c0392b; margin-left: 2px; }
-    .field-hint {
-      font-size: 12px; color: #777; margin-bottom: 6px; line-height: 1.5;
-    }
-    .field input[type=text],
-    .field input[type=email],
-    .field input[type=tel],
-    .field textarea,
-    .field select {
-      width: 100%; padding: 11px 14px;
-      border: 1.5px solid rgba(38,38,38,0.3);
-      border-radius: 6px; font-size: 15px;
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid rgba(38,38,38,0.25);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.6);
       font-family: 'Raleway', sans-serif;
-      color: #262626; background: rgba(255,255,255,0.55);
+      font-size: 1rem;
+      color: #262626;
+      outline: none;
       transition: border-color 0.2s;
-      appearance: none; -webkit-appearance: none;
+      appearance: none;
+      -webkit-appearance: none;
     }
-    .field select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M0 0l5.5 7L11 0z' fill='%23262626'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: #262626;
+      background: rgba(255,255,255,0.9);
     }
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      outline: none; border-color: #262626;
-    }
-    .field textarea { resize: vertical; min-height: 88px; }
+    .field-group textarea { resize: vertical; min-height: 100px; }
+    .field-hint { font-size: 0.8rem; opacity: 0.55; margin-top: 5px; }
 
-    /* DOB row */
-    .dob-row { display: flex; align-items: center; gap: 8px; }
-    .dob-row input { flex: 1; text-align: center; }
-    .dob-sep { color: #888; font-weight: 600; font-size: 18px; }
-
-    /* ── CHOICE BUTTONS ── */
-    .choice-list { display: flex; flex-direction: column; gap: 10px; }
+    .choices { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
     .choice-btn {
-      display: flex; align-items: center; gap: 12px;
-      padding: 13px 16px;
-      border: 1.5px solid rgba(38,38,38,0.3);
-      border-radius: 6px; cursor: pointer;
-      background: rgba(255,255,255,0.45);
-      transition: border-color 0.15s, background 0.15s;
+      padding: 16px 20px;
+      border: 1.5px solid rgba(38,38,38,0.25);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.5);
       font-family: 'Raleway', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #262626;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
     }
-    .choice-btn:hover { border-color: #262626; background: rgba(255,255,255,0.7); }
-    .choice-btn.selected { border-color: #262626; background: rgba(255,255,255,0.7); }
-    .choice-btn input[type=radio],
-    .choice-btn input[type=checkbox] {
-      accent-color: #262626; width: 17px; height: 17px; flex-shrink: 0;
-    }
-    .choice-label { font-size: 15px; color: #262626; font-weight: 500; }
+    .choice-btn:hover { border-color: #262626; background: rgba(255,255,255,0.8); }
+    .choice-btn.selected { background: #262626; color: #F1ECE2; border-color: #262626; }
 
-    /* Multi-select checkboxes (source of funds) */
-    .check-list { display: flex; flex-direction: column; gap: 10px; }
-
-    /* ── BUTTONS ── */
-    .btn-primary {
-      display: inline-block;
-      background: #262626; color: #fff;
-      border: none; border-radius: 6px;
-      padding: 13px 38px;
-      font-size: 15px; font-weight: 700;
-      font-family: 'Raleway', sans-serif;
-      cursor: pointer; letter-spacing: 0.3px;
-      transition: background 0.2s, transform 0.1s;
-      margin-top: 8px;
-    }
-    .btn-primary:hover { background: #111; }
-    .btn-primary:active { transform: scale(0.98); }
-    .btn-primary:disabled { background: #888; cursor: not-allowed; }
-
-    .btn-back {
-      background: none; border: none;
-      color: #555; font-size: 13px;
-      font-family: 'Raleway', sans-serif;
-      cursor: pointer; margin-top: 14px;
-      display: inline-flex; align-items: center; gap: 4px;
-      text-decoration: underline; padding: 0;
-    }
-    .btn-back:hover { color: #262626; }
-
-    .btn-row { display: flex; flex-direction: column; align-items: flex-start; }
-
-    /* ── VALIDATION ── */
-    .field-error {
-      font-size: 12px; color: #c0392b;
-      margin-top: 5px; display: none;
-    }
-    .has-error input, .has-error textarea, .has-error select {
-      border-color: #c0392b !important;
-    }
-    .has-error .field-error { display: block; }
-    .form-error-msg {
-      background: #fdecea; border: 1px solid #f5c6c4;
-      color: #c0392b; padding: 12px 16px; border-radius: 6px;
-      font-size: 13px; margin-bottom: 16px; display: none;
-    }
-
-    /* ── TERMS BOX ── */
     .terms-box {
-      font-size: 13px; color: #444; line-height: 1.75;
       background: rgba(255,255,255,0.5);
       border: 1.5px solid rgba(38,38,38,0.2);
-      border-radius: 6px; padding: 18px;
-      max-height: 240px; overflow-y: auto;
-      margin-bottom: 18px;
+      border-radius: 8px;
+      padding: 20px;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-height: 220px;
+      overflow-y: auto;
     }
     .terms-box a { color: #262626; }
-    .terms-accept {
-      display: flex; align-items: flex-start; gap: 10px; margin-bottom: 22px;
-    }
-    .terms-accept input[type=checkbox] {
-      width: 18px; height: 18px; margin-top: 2px;
-      accent-color: #262626; flex-shrink: 0;
-    }
-    .terms-accept label { font-size: 14px; font-weight: 600; cursor: pointer; color: #262626; }
 
-    /* ── FILE UPLOAD ── */
-    .upload-box {
-      position: relative; border: 2px dashed rgba(38,38,38,0.3);
-      border-radius: 6px; padding: 30px 20px;
-      text-align: center; color: #777;
-      background: rgba(255,255,255,0.45);
-      cursor: pointer; transition: border-color 0.2s;
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 28px;
+      cursor: pointer;
     }
-    .upload-box:hover { border-color: #262626; }
-    .upload-box input[type=file] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
+    .check-row input[type="checkbox"] {
+      width: 20px; height: 20px; min-width: 20px;
+      margin-top: 2px;
+      accent-color: #262626;
+      cursor: pointer;
     }
-    .upload-box .upload-icon { font-size: 30px; margin-bottom: 8px; }
-    .upload-box p { font-size: 14px; }
-    .upload-box .upload-hint { font-size: 12px; color: #aaa; margin-top: 4px; }
-    #uploadFileName { font-size: 13px; color: #262626; margin-top: 8px; font-weight: 600; }
+    .check-row span { font-size: 0.95rem; line-height: 1.5; }
 
-    /* ── THANK YOU ── */
-    .thankyou-wrap { text-align: center; padding: 40px 20px; }
-    .thankyou-wrap .ty-tick { font-size: 50px; margin-bottom: 20px; }
-    .thankyou-wrap h2 {
-      font-size: 24px; font-weight: 700; color: #262626; margin-bottom: 14px;
+    .checkbox-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .checkbox-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #262626; cursor: pointer; }
+    .checkbox-item label { font-size: 0.95rem; cursor: pointer; }
+
+    .btn {
+      display: inline-block;
+      padding: 16px 36px;
+      background: #262626;
+      color: #F1ECE2;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Raleway', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s;
     }
-    .thankyou-wrap p { font-size: 15px; color: #555; line-height: 1.75; }
+    .btn:hover { opacity: 0.85; }
+    .btn-outline {
+      background: transparent;
+      color: #262626;
+      border: 1.5px solid #262626;
+    }
+    .btn-outline:hover { background: rgba(38,38,38,0.05); opacity: 1; }
+    .btn-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 
-    /* ── DIVIDER ── */
-    .divider { border: none; border-top: 1px solid rgba(38,38,38,0.12); margin: 28px 0; }
+    .file-upload-area {
+      border: 2px dashed rgba(38,38,38,0.3);
+      border-radius: 8px;
+      padding: 36px 20px;
+      text-align: center;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: border-color 0.2s;
+      margin-bottom: 24px;
+    }
+    .file-upload-area:hover { border-color: #262626; }
+    .file-upload-area input[type="file"] { display: none; }
+    .file-upload-area p { font-size: 0.9rem; opacity: 0.65; margin-top: 8px; }
+    #file-name-display { font-size: 0.85rem; margin-top: 10px; opacity: 0.7; }
 
-    /* ── MOBILE ── */
-    @media (max-width: 560px) {
-      body { padding: 24px 14px 48px; }
-      .section-title { font-size: 19px; }
-      .welcome-wrap h1 { font-size: 22px; }
-      .dob-row gap: 6px; }
+    .err { color: #c0392b; font-size: 0.85rem; margin-top: 6px; display: none; }
+    #submit-error { color: #c0392b; font-size: 0.9rem; margin-top: 12px; display: none; }
+    #submit-loading { font-size: 0.9rem; margin-top: 12px; display: none; opacity: 0.65; }
+
+    #scr-thankyou { align-items: center; text-align: center; }
+    #scr-thankyou .logo-wrap { margin-bottom: 40px; }
+    #scr-thankyou .logo-wrap img { width: 160px; max-width: 70vw; }
+    #scr-thankyou h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 16px; }
+    #scr-thankyou p { font-size: 1rem; line-height: 1.75; opacity: 0.75; max-width: 480px; }
+
+    @media (max-width: 480px) {
+      .screen { padding: 50px 18px 70px; }
+      #scr-welcome h1 { font-size: 1.6rem; }
+      .statement-screen h2 { font-size: 1.35rem; }
+      .section-title { font-size: 1.25rem; }
     }
   </style>
 </head>
-
 <body>
-<div class="card">
 
-  <!-- Progress bar (hidden on welcome) -->
-  <div class="progress-wrap" id="progressWrap" style="display:none;">
-    <div class="progress-fill" id="progressFill"></div>
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<!-- ══ WELCOME ══ -->
+<div id="scr-welcome" class="screen active">
+  <div class="logo-wrap">
+    <img src="logo.png" alt="K2 FX" />
+  </div>
+  <h1>Welcome to K2 FX</h1>
+  <p>Client Onboarding Form</p>
+  <button class="btn" onclick="showScreen('scr-s1')">Start</button>
+</div>
+
+<!-- ══ S1 — Intro Statement ══ -->
+<div id="scr-s1" class="screen statement-screen">
+  <h2>Welcome to K2 FX</h2>
+  <p>Thank you for taking the time to complete our onboarding form. This process has been designed to be as quick and straightforward as possible.</p>
+  <p>We'll ask for some basic personal or company information, along with a few details about how you expect to use your account. This helps us ensure everything is set up correctly from the outset.</p>
+  <p>If you're unsure about any question, please answer as best you can. Our team will review your application and follow up if we need anything further.</p>
+  <div class="btn-row">
+    <button class="btn" onclick="showScreen('scr-q1')">Continue</button>
+  </div>
+</div>
+
+<!-- ══ Q1 — Client Type ══ -->
+<div id="scr-q1" class="screen">
+  <p class="section-title">What type of client are you onboarding as?</p>
+  <p class="section-desc">Please select the option that best describes you.</p>
+  <div class="choices">
+    <button class="choice-btn" id="q1-corporate" onclick="pickQ1('corporate')">Corporate Client</button>
+    <button class="choice-btn" id="q1-private" onclick="pickQ1('private')">Private Client</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s1')">Back</button>
+    <button class="btn" onclick="submitQ1()">Next</button>
+  </div>
+</div><!-- ══ S2 — Applicant Details (Corporate) ══ -->
+<div id="scr-s2" class="screen">
+  <p class="section-title">Applicant Details</p>
+  <p class="section-desc">We'll start with a few personal details about the main applicant. This should be the individual completing this form and acting as our primary point of contact for the business.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s2-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s2-title">Please select a title.</div>
   </div>
 
-  <!-- ════════════════════════════════════════════
-       WELCOME SCREEN
-  ════════════════════════════════════════════ -->
-  <div class="screen active" id="scr-welcome">
-    <div class="welcome-wrap">
-
-      <!-- K2 FX Mountain Logo (SVG) -->
-      <svg class="logo-svg" width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Mountains -->
-        <path d="M100 20 L60 90 L140 90 Z" fill="#262626"/>
-        <path d="M60 90 L20 90 L55 45 Z" fill="#262626" opacity="0.85"/>
-        <path d="M140 90 L180 90 L145 45 Z" fill="#262626" opacity="0.85"/>
-        <path d="M15 90 L185 90" stroke="#262626" stroke-width="2"/>
-        <!-- K2 text -->
-        <text x="100" y="118" text-anchor="middle" font-family="Raleway, sans-serif" font-size="22" font-weight="800" fill="#262626" letter-spacing="6">K 2</text>
-        <!-- FX text -->
-        <text x="100" y="136" text-anchor="middle" font-family="Raleway, sans-serif" font-size="11" font-weight="500" fill="#262626" letter-spacing="8">F  X</text>
-      </svg>
-
-      <h1>Welcome to K2 FX</h1>
-      <p>Solutions to life's complex situations</p>
-      <button class="btn-primary" onclick="showScreen('scr-s1')">Start</button>
-    </div>
+  <div class="field-group">
+    <label>Full Legal Name *</label>
+    <input type="text" id="s2-fullname" placeholder="As it appears on your passport" />
+    <div class="err" id="err-s2-fullname">Please enter your full legal name.</div>
   </div>
 
-  <!-- ════════════════════════════════════════════
-       S1 – INTRODUCTION
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s1">
-    <h2 class="section-title">Welcome to K2 FX</h2>
-    <div class="section-desc">
-      <p>Thank you for taking the time to complete our onboarding form.</p>
-      <p>This process has been designed to be as quick and straightforward as possible. We'll ask for some basic personal or company information, along with a few details about how you expect to use your account.</p>
-      <p>This helps us ensure everything is set up correctly from the outset.</p>
-      <p>If you're unsure about any question, please answer as best you can.</p>
-      <p>Our team will review your application and follow up if we need anything further.</p>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="showScreen('scr-q1')">Continue</button>
-    </div>
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s2-dob" />
+    <div class="err" id="err-s2-dob">Please enter your date of birth.</div>
   </div>
 
-  <!-- ════════════════════════════════════════════
-       Q1 – CLIENT TYPE
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-q1">
-    <h2 class="section-title">What type of client are you onboarding as?<span class="req">*</span></h2>
-    <div class="choice-list" style="margin-bottom:28px;">
-      <div class="choice-btn" id="q1-corp-btn" onclick="pickQ1('corporate')">
-        <input type="radio" name="q1" id="q1-corp" value="corporate"> <span class="choice-label">Corporate Client</span>
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s2-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>American</option>
+      <option>Andorran</option><option>Angolan</option><option>Argentine</option><option>Armenian</option>
+      <option>Australian</option><option>Austrian</option><option>Azerbaijani</option><option>Bahamian</option>
+      <option>Bahraini</option><option>Bangladeshi</option><option>Barbadian</option><option>Belarusian</option>
+      <option>Belgian</option><option>Belizean</option><option>Beninese</option><option>Bhutanese</option>
+      <option>Bolivian</option><option>Bosnian</option><option>Brazilian</option><option>British</option>
+      <option>Bruneian</option><option>Bulgarian</option><option>Burkinabe</option><option>Burundian</option>
+      <option>Cambodian</option><option>Cameroonian</option><option>Canadian</option><option>Cape Verdean</option>
+      <option>Central African</option><option>Chadian</option><option>Chilean</option><option>Chinese</option>
+      <option>Colombian</option><option>Comorian</option><option>Congolese</option><option>Costa Rican</option>
+      <option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option>
+      <option>Danish</option><option>Djiboutian</option><option>Dominican</option><option>Dutch</option>
+      <option>Ecuadorian</option><option>Egyptian</option><option>Emirati</option><option>Equatorial Guinean</option>
+      <option>Eritrean</option><option>Estonian</option><option>Ethiopian</option><option>Fijian</option>
+      <option>Finnish</option><option>French</option><option>Gabonese</option><option>Gambian</option>
+      <option>Georgian</option><option>German</option><option>Ghanaian</option><option>Greek</option>
+      <option>Grenadian</option><option>Guatemalan</option><option>Guinean</option><option>Guyanese</option>
+      <option>Haitian</option><option>Honduran</option><option>Hungarian</option><option>Icelandic</option>
+      <option>Indian</option><option>Indonesian</option><option>Iranian</option><option>Iraqi</option>
+      <option>Irish</option><option>Israeli</option><option>Italian</option><option>Ivorian</option>
+      <option>Jamaican</option><option>Japanese</option><option>Jordanian</option><option>Kazakhstani</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Kyrgyz</option>
+      <option>Laotian</option><option>Latvian</option><option>Lebanese</option><option>Liberian</option>
+      <option>Libyan</option><option>Liechtensteiner</option><option>Lithuanian</option><option>Luxembourger</option>
+      <option>Macedonian</option><option>Malagasy</option><option>Malawian</option><option>Malaysian</option>
+      <option>Maldivian</option><option>Malian</option><option>Maltese</option><option>Mauritanian</option>
+      <option>Mauritian</option><option>Mexican</option><option>Moldovan</option><option>Monegasque</option>
+      <option>Mongolian</option><option>Montenegrin</option><option>Moroccan</option><option>Mozambican</option>
+      <option>Namibian</option><option>Nepali</option><option>New Zealander</option><option>Nicaraguan</option>
+      <option>Nigerian</option><option>Norwegian</option><option>Omani</option><option>Pakistani</option>
+      <option>Panamanian</option><option>Papua New Guinean</option><option>Paraguayan</option><option>Peruvian</option>
+      <option>Filipino</option><option>Polish</option><option>Portuguese</option><option>Qatari</option>
+      <option>Romanian</option><option>Russian</option><option>Rwandan</option><option>Saudi</option>
+      <option>Senegalese</option><option>Serbian</option><option>Sierra Leonean</option><option>Singaporean</option>
+      <option>Slovak</option><option>Slovenian</option><option>Somali</option><option>South African</option>
+      <option>South Sudanese</option><option>Spanish</option><option>Sri Lankan</option><option>Sudanese</option>
+      <option>Surinamese</option><option>Swazi</option><option>Swedish</option><option>Swiss</option>
+      <option>Syrian</option><option>Taiwanese</option><option>Tajik</option><option>Tanzanian</option>
+      <option>Thai</option><option>Timorese</option><option>Togolese</option><option>Trinidadian</option>
+      <option>Tunisian</option><option>Turkish</option><option>Turkmen</option><option>Ugandan</option>
+      <option>Ukrainian</option><option>Uruguayan</option><option>Uzbek</option><option>Venezuelan</option>
+      <option>Vietnamese</option><option>Yemeni</option><option>Zambian</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s2-nationality">Please select your nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s2-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s2-address">Please enter your residential address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Email Address *</label>
+    <input type="email" id="s2-email" placeholder="your@email.com" />
+    <div class="err" id="err-s2-email">Please enter a valid email address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Mobile Number *</label>
+    <input type="tel" id="s2-mobile" placeholder="+44 7700 000000" />
+    <div class="err" id="err-s2-mobile">Please enter your mobile number.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-q1')">Back</button>
+    <button class="btn" onclick="submitS2()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S3 — Applicant Details (Private) ══ -->
+<div id="scr-s3" class="screen">
+  <p class="section-title">Applicant Details</p>
+  <p class="section-desc">We'll start with a few personal details. Please fill in all fields accurately as they appear on your official documents.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s3-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s3-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Legal Name *</label>
+    <input type="text" id="s3-fullname" placeholder="As it appears on your passport" />
+    <div class="err" id="err-s3-fullname">Please enter your full legal name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s3-dob" />
+    <div class="err" id="err-s3-dob">Please enter your date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s3-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>American</option>
+      <option>Andorran</option><option>Angolan</option><option>Argentine</option><option>Armenian</option>
+      <option>Australian</option><option>Austrian</option><option>Azerbaijani</option><option>Bahamian</option>
+      <option>Bahraini</option><option>Bangladeshi</option><option>Barbadian</option><option>Belarusian</option>
+      <option>Belgian</option><option>Belizean</option><option>Beninese</option><option>Bhutanese</option>
+      <option>Bolivian</option><option>Bosnian</option><option>Brazilian</option><option>British</option>
+      <option>Bruneian</option><option>Bulgarian</option><option>Burkinabe</option><option>Burundian</option>
+      <option>Cambodian</option><option>Cameroonian</option><option>Canadian</option><option>Cape Verdean</option>
+      <option>Central African</option><option>Chadian</option><option>Chilean</option><option>Chinese</option>
+      <option>Colombian</option><option>Comorian</option><option>Congolese</option><option>Costa Rican</option>
+      <option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option>
+      <option>Danish</option><option>Djiboutian</option><option>Dominican</option><option>Dutch</option>
+      <option>Ecuadorian</option><option>Egyptian</option><option>Emirati</option><option>Equatorial Guinean</option>
+      <option>Eritrean</option><option>Estonian</option><option>Ethiopian</option><option>Fijian</option>
+      <option>Finnish</option><option>French</option><option>Gabonese</option><option>Gambian</option>
+      <option>Georgian</option><option>German</option><option>Ghanaian</option><option>Greek</option>
+      <option>Grenadian</option><option>Guatemalan</option><option>Guinean</option><option>Guyanese</option>
+      <option>Haitian</option><option>Honduran</option><option>Hungarian</option><option>Icelandic</option>
+      <option>Indian</option><option>Indonesian</option><option>Iranian</option><option>Iraqi</option>
+      <option>Irish</option><option>Israeli</option><option>Italian</option><option>Ivorian</option>
+      <option>Jamaican</option><option>Japanese</option><option>Jordanian</option><option>Kazakhstani</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Kyrgyz</option>
+      <option>Laotian</option><option>Latvian</option><option>Lebanese</option><option>Liberian</option>
+      <option>Libyan</option><option>Liechtensteiner</option><option>Lithuanian</option><option>Luxembourger</option>
+      <option>Macedonian</option><option>Malagasy</option><option>Malawian</option><option>Malaysian</option>
+      <option>Maldivian</option><option>Malian</option><option>Maltese</option><option>Mauritanian</option>
+      <option>Mauritian</option><option>Mexican</option><option>Moldovan</option><option>Monegasque</option>
+      <option>Mongolian</option><option>Montenegrin</option><option>Moroccan</option><option>Mozambican</option>
+      <option>Namibian</option><option>Nepali</option><option>New Zealander</option><option>Nicaraguan</option>
+      <option>Nigerian</option><option>Norwegian</option><option>Omani</option><option>Pakistani</option>
+      <option>Panamanian</option><option>Papua New Guinean</option><option>Paraguayan</option><option>Peruvian</option>
+      <option>Filipino</option><option>Polish</option><option>Portuguese</option><option>Qatari</option>
+      <option>Romanian</option><option>Russian</option><option>Rwandan</option><option>Saudi</option>
+      <option>Senegalese</option><option>Serbian</option><option>Sierra Leonean</option><option>Singaporean</option>
+      <option>Slovak</option><option>Slovenian</option><option>Somali</option><option>South African</option>
+      <option>South Sudanese</option><option>Spanish</option><option>Sri Lankan</option><option>Sudanese</option>
+      <option>Surinamese</option><option>Swazi</option><option>Swedish</option><option>Swiss</option>
+      <option>Syrian</option><option>Taiwanese</option><option>Tajik</option><option>Tanzanian</option>
+      <option>Thai</option><option>Timorese</option><option>Togolese</option><option>Trinidadian</option>
+      <option>Tunisian</option><option>Turkish</option><option>Turkmen</option><option>Ugandan</option>
+      <option>Ukrainian</option><option>Uruguayan</option><option>Uzbek</option><option>Venezuelan</option>
+      <option>Vietnamese</option><option>Yemeni</option><option>Zambian</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s3-nationality">Please select your nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s3-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s3-address">Please enter your residential address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Email Address *</label>
+    <input type="email" id="s3-email" placeholder="your@email.com" />
+    <div class="err" id="err-s3-email">Please enter a valid email address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Mobile Number *</label>
+    <input type="tel" id="s3-mobile" placeholder="+44 7700 000000" />
+    <div class="err" id="err-s3-mobile">Please enter your mobile number.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-q1')">Back</button>
+    <button class="btn" onclick="submitS3()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S4 — Company Details ══ -->
+<div id="scr-s4" class="screen">
+  <p class="section-title">Company Details</p>
+  <p class="section-desc">Next, we'll ask for some basic information about the business itself. This allows us to identify the company correctly and understand the nature of its activity.</p>
+
+  <div class="field-group">
+    <label>Registered Company Name *</label>
+    <input type="text" id="s4-companyname" placeholder="Full registered name" />
+    <div class="err" id="err-s4-companyname">Please enter the registered company name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Country of Incorporation *</label>
+    <input type="text" id="s4-country" placeholder="e.g. United Kingdom" />
+    <div class="err" id="err-s4-country">Please enter the country of incorporation.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Company Registration Number *</label>
+    <input type="text" id="s4-regnumber" placeholder="e.g. 12345678" />
+    <p class="field-hint">This is the unique number assigned to your company by Companies House or the equivalent authority in your country.</p>
+    <div class="err" id="err-s4-regnumber">Please enter the company registration number.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Business Sector *</label>
+    <input type="text" id="s4-sector" placeholder="e.g. Financial Services, Technology, Real Estate" />
+    <div class="err" id="err-s4-sector">Please enter your business sector.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Company Website</label>
+    <input type="text" id="s4-website" placeholder="https://www.example.com" />
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s2')">Back</button>
+    <button class="btn" onclick="submitS4()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S5 — Directors ══ -->
+<div id="scr-s5" class="screen">
+  <p class="section-title">Directors</p>
+  <p class="section-desc">We now need to confirm the company's directors. Depending on your company structure, we may require details for one or more directors. If you are a sole director, you'll be able to confirm that here.</p>
+
+  <div class="field-group">
+    <label>Are you a registered company director? *</label>
+    <div class="choices">
+      <button class="choice-btn" id="s5-director-yes" onclick="pickRadio('s5-director','yes')">Yes</button>
+      <button class="choice-btn" id="s5-director-no" onclick="pickRadio('s5-director','no')">No</button>
+    </div>
+    <div class="err" id="err-s5-director">Please select an option.</div>
+  </div>
+
+  <div class="field-group" id="s5-numdirectors-group" style="display:none;">
+    <label>How many directors does the company have? *</label>
+    <div class="choices">
+      <button class="choice-btn" id="s5-numdirectors-sole" onclick="pickRadio('s5-numdirectors','sole')">Sole Director</button>
+      <button class="choice-btn" id="s5-numdirectors-more" onclick="pickRadio('s5-numdirectors','more')">More than One</button>
+    </div>
+    <div class="err" id="err-s5-numdirectors">Please select an option.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s4')">Back</button>
+    <button class="btn" onclick="submitS5()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S6 — Director Details 1 ══ -->
+<div id="scr-s6" class="screen">
+  <p class="section-title">Director Details</p>
+  <p class="section-desc">We usually need details for two company directors. If you are a director, please give details for one other director. If you selected 'sole director' and that person is not you, please enter their details here.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s6-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s6-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s6-fullname" placeholder="Director's full legal name" />
+    <div class="err" id="err-s6-fullname">Please enter the director's full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s6-dob" />
+    <div class="err" id="err-s6-dob">Please enter the director's date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s6-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>American</option>
+      <option>Australian</option><option>Austrian</option><option>Bahraini</option><option>Bangladeshi</option>
+      <option>Belgian</option><option>Brazilian</option><option>British</option><option>Bulgarian</option>
+      <option>Canadian</option><option>Chilean</option><option>Chinese</option><option>Colombian</option>
+      <option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option>
+      <option>Danish</option><option>Dutch</option><option>Egyptian</option><option>Emirati</option>
+      <option>Estonian</option><option>Ethiopian</option><option>Finnish</option><option>French</option>
+      <option>Georgian</option><option>German</option><option>Ghanaian</option><option>Greek</option>
+      <option>Hungarian</option><option>Icelandic</option><option>Indian</option><option>Indonesian</option>
+      <option>Iranian</option><option>Iraqi</option><option>Irish</option><option>Israeli</option>
+      <option>Italian</option><option>Jamaican</option><option>Japanese</option><option>Jordanian</option>
+      <option>Kazakhstani</option><option>Kenyan</option><option>Korean</option><option>Kuwaiti</option>
+      <option>Latvian</option><option>Lebanese</option><option>Lithuanian</option><option>Malaysian</option>
+      <option>Maltese</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Omani</option><option>Pakistani</option><option>Filipino</option>
+      <option>Polish</option><option>Portuguese</option><option>Qatari</option><option>Romanian</option>
+      <option>Russian</option><option>Saudi</option><option>Serbian</option><option>Singaporean</option>
+      <option>Slovak</option><option>Slovenian</option><option>South African</option><option>Spanish</option>
+      <option>Sri Lankan</option><option>Swedish</option><option>Swiss</option><option>Syrian</option>
+      <option>Thai</option><option>Turkish</option><option>Ukrainian</option><option>Venezuelan</option>
+      <option>Vietnamese</option><option>Zambian</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s6-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s6-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s6-address">Please enter the director's residential address.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s5')">Back</button>
+    <button class="btn" onclick="submitS6()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S7 — Director Details 2 ══ -->
+<div id="scr-s7" class="screen">
+  <p class="section-title">Director Details (Second Director)</p>
+  <p class="section-desc">Please provide details for the second company director.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s7-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s7-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s7-fullname" placeholder="Director's full legal name" />
+    <div class="err" id="err-s7-fullname">Please enter the director's full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s7-dob" />
+    <div class="err" id="err-s7-dob">Please enter the director's date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s7-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>American</option>
+      <option>Australian</option><option>Austrian</option><option>Bahraini</option><option>Bangladeshi</option>
+      <option>Belgian</option><option>Brazilian</option><option>British</option><option>Bulgarian</option>
+      <option>Canadian</option><option>Chilean</option><option>Chinese</option><option>Colombian</option>
+      <option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option>
+      <option>Danish</option><option>Dutch</option><option>Egyptian</option><option>Emirati</option>
+      <option>Estonian</option><option>Ethiopian</option><option>Finnish</option><option>French</option>
+      <option>Georgian</option><option>German</option><option>Ghanaian</option><option>Greek</option>
+      <option>Hungarian</option><option>Icelandic</option><option>Indian</option><option>Indonesian</option>
+      <option>Iranian</option><option>Iraqi</option><option>Irish</option><option>Israeli</option>
+      <option>Italian</option><option>Jamaican</option><option>Japanese</option><option>Jordanian</option>
+      <option>Kazakhstani</option><option>Kenyan</option><option>Korean</option><option>Kuwaiti</option>
+      <option>Latvian</option><option>Lebanese</option><option>Lithuanian</option><option>Malaysian</option>
+      <option>Maltese</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Omani</option><option>Pakistani</option><option>Filipino</option>
+      <option>Polish</option><option>Portuguese</option><option>Qatari</option><option>Romanian</option>
+      <option>Russian</option><option>Saudi</option><option>Serbian</option><option>Singaporean</option>
+      <option>Slovak</option><option>Slovenian</option><option>South African</option><option>Spanish</option>
+      <option>Sri Lankan</option><option>Swedish</option><option>Swiss</option><option>Syrian</option>
+      <option>Thai</option><option>Turkish</option><option>Ukrainian</option><option>Venezuelan</option>
+      <option>Vietnamese</option><option>Zambian</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s7-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s7-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s7-address">Please enter the director's residential address.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s6')">Back</button>
+    <button class="btn" onclick="submitS7()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S8 — Ownership / Beneficial Owners ══ -->
+<div id="scr-s8" class="screen">
+  <p class="section-title">Ownership</p>
+  <p class="section-desc">We also need to understand the ownership structure of the business. Specifically, we are required to identify any individuals who own twenty-five percent or more of the company. If there are no individuals above this threshold, you can simply confirm that.</p>
+
+  <div class="field-group">
+    <label>How many individuals own 25% or more of the company? *</label>
+    <div class="choices">
+      <button class="choice-btn" id="s8-owners-0" onclick="pickRadio('s8-owners','0')">0</button>
+      <button class="choice-btn" id="s8-owners-1" onclick="pickRadio('s8-owners','1')">1</button>
+      <button class="choice-btn" id="s8-owners-2" onclick="pickRadio('s8-owners','2')">2</button>
+      <button class="choice-btn" id="s8-owners-3" onclick="pickRadio('s8-owners','3')">3</button>
+      <button class="choice-btn" id="s8-owners-4" onclick="pickRadio('s8-owners','4')">4</button>
+    </div>
+    <div class="err" id="err-s8-owners">Please select an option.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" id="s8-back-btn" onclick="goBackFromS8()">Back</button>
+    <button class="btn" onclick="submitS8()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S9 — Beneficial Owner 1 ══ -->
+<div id="scr-s9" class="screen">
+  <p class="section-title">Beneficial Owner 1</p>
+  <p class="section-desc">Please provide details for the first individual who owns 25% or more of the company.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s9-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s9-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s9-fullname" placeholder="Full legal name" />
+    <div class="err" id="err-s9-fullname">Please enter their full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s9-dob" />
+    <div class="err" id="err-s9-dob">Please enter their date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s9-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>American</option>
+      <option>Australian</option><option>Austrian</option><option>Bahraini</option><option>Bangladeshi</option>
+      <option>Belgian</option><option>Brazilian</option><option>British</option><option>Bulgarian</option>
+      <option>Canadian</option><option>Chilean</option><option>Chinese</option><option>Colombian</option>
+      <option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option>
+      <option>Danish</option><option>Dutch</option><option>Egyptian</option><option>Emirati</option>
+      <option>Estonian</option><option>Ethiopian</option><option>Finnish</option><option>French</option>
+      <option>Georgian</option><option>German</option><option>Ghanaian</option><option>Greek</option>
+      <option>Hungarian</option><option>Icelandic</option><option>Indian</option><option>Indonesian</option>
+      <option>Iranian</option><option>Iraqi</option><option>Irish</option><option>Israeli</option>
+      <option>Italian</option><option>Jamaican</option><option>Japanese</option><option>Jordanian</option>
+      <option>Kazakhstani</option><option>Kenyan</option><option>Korean</option><option>Kuwaiti</option>
+      <option>Latvian</option><option>Lebanese</option><option>Lithuanian</option><option>Malaysian</option>
+      <option>Maltese</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Omani</option><option>Pakistani</option><option>Filipino</option>
+      <option>Polish</option><option>Portuguese</option><option>Qatari</option><option>Romanian</option>
+      <option>Russian</option><option>Saudi</option><option>Serbian</option><option>Singaporean</option>
+      <option>Slovak</option><option>Slovenian</option><option>South African</option><option>Spanish</option>
+      <option>Sri Lankan</option><option>Swedish</option><option>Swiss</option><option>Syrian</option>
+      <option>Thai</option><option>Turkish</option><option>Ukrainian</option><option>Venezuelan</option>
+      <option>Vietnamese</option><option>Zambian</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s9-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s9-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s9-address">Please enter their residential address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Percentage of Shareholding *</label>
+    <input type="text" id="s9-shareholding" placeholder="e.g. 50%" />
+    <div class="err" id="err-s9-shareholding">Please enter their percentage of shareholding.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s8')">Back</button>
+    <button class="btn" onclick="submitS9()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S10 — Beneficial Owner 2 ══ -->
+<div id="scr-s10" class="screen">
+  <p class="section-title">Beneficial Owner 2</p>
+  <p class="section-desc">Please provide details for the second individual who owns 25% or more of the company.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s10-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s10-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s10-fullname" placeholder="Full legal name" />
+    <div class="err" id="err-s10-fullname">Please enter their full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s10-dob" />
+    <div class="err" id="err-s10-dob">Please enter their date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s10-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>Algerian</option><option>American</option>
+      <option>Australian</option><option>Austrian</option><option>British</option><option>Canadian</option>
+      <option>Chinese</option><option>Czech</option><option>Danish</option><option>Dutch</option>
+      <option>Egyptian</option><option>Emirati</option><option>Finnish</option><option>French</option>
+      <option>German</option><option>Greek</option><option>Hungarian</option><option>Indian</option>
+      <option>Indonesian</option><option>Iranian</option><option>Iraqi</option><option>Irish</option>
+      <option>Israeli</option><option>Italian</option><option>Japanese</option><option>Jordanian</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Lebanese</option>
+      <option>Malaysian</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Pakistani</option><option>Filipino</option><option>Polish</option>
+      <option>Portuguese</option><option>Qatari</option><option>Romanian</option><option>Russian</option>
+      <option>Saudi</option><option>Singaporean</option><option>South African</option><option>Spanish</option>
+      <option>Sri Lankan</option><option>Swedish</option><option>Swiss</option><option>Thai</option>
+      <option>Turkish</option><option>Ukrainian</option><option>Vietnamese</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s10-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s10-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s10-address">Please enter their residential address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Percentage of Shareholding *</label>
+    <input type="text" id="s10-shareholding" placeholder="e.g. 30%" />
+    <div class="err" id="err-s10-shareholding">Please enter their percentage of shareholding.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s9')">Back</button>
+    <button class="btn" onclick="submitS10()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S11 — Beneficial Owner 3 ══ -->
+<div id="scr-s11" class="screen">
+  <p class="section-title">Beneficial Owner 3</p>
+  <p class="section-desc">Please provide details for the third individual who owns 25% or more of the company.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s11-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s11-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s11-fullname" placeholder="Full legal name" />
+    <div class="err" id="err-s11-fullname">Please enter their full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s11-dob" />
+    <div class="err" id="err-s11-dob">Please enter their date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s11-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>American</option><option>Australian</option>
+      <option>Austrian</option><option>British</option><option>Canadian</option><option>Chinese</option>
+      <option>Czech</option><option>Danish</option><option>Dutch</option><option>Egyptian</option>
+      <option>Emirati</option><option>Finnish</option><option>French</option><option>German</option>
+      <option>Greek</option><option>Hungarian</option><option>Indian</option><option>Indonesian</option>
+      <option>Irish</option><option>Israeli</option><option>Italian</option><option>Japanese</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Lebanese</option>
+      <option>Malaysian</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Pakistani</option><option>Filipino</option><option>Polish</option>
+      <option>Portuguese</option><option>Qatari</option><option>Romanian</option><option>Russian</option>
+      <option>Saudi</option><option>Singaporean</option><option>South African</option><option>Spanish</option>
+      <option>Swedish</option><option>Swiss</option><option>Thai</option><option>Turkish</option>
+      <option>Ukrainian</option><option>Vietnamese</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s11-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s11-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s11-address">Please enter their residential address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Percentage of Shareholding *</label>
+    <input type="text" id="s11-shareholding" placeholder="e.g. 26%" />
+    <div class="err" id="err-s11-shareholding">Please enter their percentage of shareholding.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s10')">Back</button>
+    <button class="btn" onclick="submitS11()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S12 — Beneficial Owner 4 ══ -->
+<div id="scr-s12" class="screen">
+  <p class="section-title">Beneficial Owner 4</p>
+  <p class="section-desc">Please provide details for the fourth individual who owns 25% or more of the company.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s12-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s12-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s12-fullname" placeholder="Full legal name" />
+    <div class="err" id="err-s12-fullname">Please enter their full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s12-dob" />
+    <div class="err" id="err-s12-dob">Please enter their date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s12-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>American</option><option>Australian</option>
+      <option>Austrian</option><option>British</option><option>Canadian</option><option>Chinese</option>
+      <option>Czech</option><option>Danish</option><option>Dutch</option><option>Egyptian</option>
+      <option>Emirati</option><option>Finnish</option><option>French</option><option>German</option>
+      <option>Greek</option><option>Hungarian</option><option>Indian</option><option>Indonesian</option>
+      <option>Irish</option><option>Israeli</option><option>Italian</option><option>Japanese</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Lebanese</option>
+      <option>Malaysian</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Pakistani</option><option>Filipino</option><option>Polish</option>
+      <option>Portuguese</option><option>Qatari</option><option>Romanian</option><option>Russian</option>
+      <option>Saudi</option><option>Singaporean</option><option>South African</option><option>Spanish</option>
+      <option>Swedish</option><option>Swiss</option><option>Thai</option><option>Turkish</option>
+      <option>Ukrainian</option><option>Vietnamese</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s12-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Residential Address *</label>
+    <input type="text" id="s12-address" placeholder="Full address including postcode" />
+    <div class="err" id="err-s12-address">Please enter their residential address.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Percentage of Shareholding *</label>
+    <input type="text" id="s12-shareholding" placeholder="e.g. 25%" />
+    <div class="err" id="err-s12-shareholding">Please enter their percentage of shareholding.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s11')">Back</button>
+    <button class="btn" onclick="submitS12()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S13 — Additional Users ══ -->
+<div id="scr-s13" class="screen">
+  <p class="section-title">Additional Users</p>
+  <p class="section-desc">If anyone else will need access to the account, you can add them here. This might include colleagues, finance team members, or other authorised users.</p>
+
+  <div class="field-group">
+    <label>How many additional users do you require? *</label>
+    <div class="choices">
+      <button class="choice-btn" id="s13-users-0" onclick="pickRadio('s13-users','0')">0 — No additional users</button>
+      <button class="choice-btn" id="s13-users-1" onclick="pickRadio('s13-users','1')">1</button>
+      <button class="choice-btn" id="s13-users-2" onclick="pickRadio('s13-users','2')">2</button>
+    </div>
+    <div class="err" id="err-s13-users">Please select an option.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s8')">Back</button>
+    <button class="btn" onclick="submitS13()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S14 — Additional User 1 ══ -->
+<div id="scr-s14" class="screen">
+  <p class="section-title">Additional User 1</p>
+  <p class="section-desc">Please provide details for the first additional user.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s14-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s14-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s14-fullname" placeholder="Full legal name" />
+    <div class="err" id="err-s14-fullname">Please enter their full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s14-dob" />
+    <div class="err" id="err-s14-dob">Please enter their date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s14-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>American</option><option>Australian</option>
+      <option>Austrian</option><option>British</option><option>Canadian</option><option>Chinese</option>
+      <option>Czech</option><option>Danish</option><option>Dutch</option><option>Egyptian</option>
+      <option>Emirati</option><option>Finnish</option><option>French</option><option>German</option>
+      <option>Greek</option><option>Hungarian</option><option>Indian</option><option>Indonesian</option>
+      <option>Irish</option><option>Israeli</option><option>Italian</option><option>Japanese</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Lebanese</option>
+      <option>Malaysian</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Pakistani</option><option>Filipino</option><option>Polish</option>
+      <option>Portuguese</option><option>Qatari</option><option>Romanian</option><option>Russian</option>
+      <option>Saudi</option><option>Singaporean</option><option>South African</option><option>Spanish</option>
+      <option>Swedish</option><option>Swiss</option><option>Thai</option><option>Turkish</option>
+      <option>Ukrainian</option><option>Vietnamese</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s14-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Email Address *</label>
+    <input type="email" id="s14-email" placeholder="their@email.com" />
+    <div class="err" id="err-s14-email">Please enter their email address.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s13')">Back</button>
+    <button class="btn" onclick="submitS14()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S15 — Additional User 2 ══ -->
+<div id="scr-s15" class="screen">
+  <p class="section-title">Additional User 2</p>
+  <p class="section-desc">Please provide details for the second additional user.</p>
+
+  <div class="field-group">
+    <label>Title *</label>
+    <select id="s15-title">
+      <option value="">Please select</option>
+      <option>Mr</option><option>Mrs</option><option>Miss</option>
+      <option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
+    </select>
+    <div class="err" id="err-s15-title">Please select a title.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Full Name *</label>
+    <input type="text" id="s15-fullname" placeholder="Full legal name" />
+    <div class="err" id="err-s15-fullname">Please enter their full name.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Date of Birth *</label>
+    <input type="date" id="s15-dob" />
+    <div class="err" id="err-s15-dob">Please enter their date of birth.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Nationality *</label>
+    <select id="s15-nationality">
+      <option value="">Please select</option>
+      <option>Afghan</option><option>Albanian</option><option>American</option><option>Australian</option>
+      <option>Austrian</option><option>British</option><option>Canadian</option><option>Chinese</option>
+      <option>Czech</option><option>Danish</option><option>Dutch</option><option>Egyptian</option>
+      <option>Emirati</option><option>Finnish</option><option>French</option><option>German</option>
+      <option>Greek</option><option>Hungarian</option><option>Indian</option><option>Indonesian</option>
+      <option>Irish</option><option>Israeli</option><option>Italian</option><option>Japanese</option>
+      <option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Lebanese</option>
+      <option>Malaysian</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option>
+      <option>Norwegian</option><option>Pakistani</option><option>Filipino</option><option>Polish</option>
+      <option>Portuguese</option><option>Qatari</option><option>Romanian</option><option>Russian</option>
+      <option>Saudi</option><option>Singaporean</option><option>South African</option><option>Spanish</option>
+      <option>Swedish</option><option>Swiss</option><option>Thai</option><option>Turkish</option>
+      <option>Ukrainian</option><option>Vietnamese</option><option>Zimbabwean</option>
+    </select>
+    <div class="err" id="err-s15-nationality">Please select a nationality.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Email Address *</label>
+    <input type="email" id="s15-email" placeholder="their@email.com" />
+    <div class="err" id="err-s15-email">Please enter their email address.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s14')">Back</button>
+    <button class="btn" onclick="submitS15()">Next</button>
+  </div>
+</div><!-- ══ S16 — Account Usage (Corporate) ══ -->
+<div id="scr-s16" class="screen">
+  <p class="section-title">Account Usage</p>
+  <p class="section-desc">Importantly, we'd like to understand how you expect to use your account. This includes the types of transactions you anticipate, the currencies involved, and where funds will generally be coming from and going to. This information helps us ensure your account is set up appropriately.</p>
+
+  <div class="field-group">
+    <label>Base Currency *</label>
+    <select id="s16-basecurrency">
+      <option value="">Please select</option>
+      <option>GBP – British Pound</option><option>EUR – Euro</option><option>USD – US Dollar</option>
+      <option>AED – UAE Dirham</option><option>AUD – Australian Dollar</option><option>CAD – Canadian Dollar</option>
+      <option>CHF – Swiss Franc</option><option>CNY – Chinese Yuan</option><option>HKD – Hong Kong Dollar</option>
+      <option>JPY – Japanese Yen</option><option>NOK – Norwegian Krone</option><option>NZD – New Zealand Dollar</option>
+      <option>SEK – Swedish Krona</option><option>SGD – Singapore Dollar</option><option>ZAR – South African Rand</option>
+    </select>
+    <div class="err" id="err-s16-basecurrency">Please select a base currency.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Which currencies do you intend to trade? *</label>
+    <input type="text" id="s16-currencies" placeholder="e.g. GBP, EUR, USD" />
+    <div class="err" id="err-s16-currencies">Please enter the currencies you intend to trade.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Estimated Monthly Transaction Volume *</label>
+    <select id="s16-monthlyvolume">
+      <option value="">Please select</option>
+      <option>Under £10,000</option><option>£10,000 – £50,000</option><option>£50,000 – £100,000</option>
+      <option>£100,000 – £500,000</option><option>£500,000 – £1,000,000</option><option>Over £1,000,000</option>
+    </select>
+    <div class="err" id="err-s16-monthlyvolume">Please select an estimated monthly volume.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Estimated Number of Transactions per Month *</label>
+    <select id="s16-txcount">
+      <option value="">Please select</option>
+      <option>1 – 5</option><option>6 – 10</option><option>11 – 20</option>
+      <option>21 – 50</option><option>More than 50</option>
+    </select>
+    <div class="err" id="err-s16-txcount">Please select an estimated transaction count.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Country / Countries of Origin for Funds *</label>
+    <input type="text" id="s16-fundorigin" placeholder="e.g. United Kingdom, Germany" />
+    <div class="err" id="err-s16-fundorigin">Please enter the country or countries of origin for funds.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Destination of Payments *</label>
+    <input type="text" id="s16-destination" placeholder="e.g. United Kingdom, France" />
+    <div class="err" id="err-s16-destination">Please enter the destination of payments.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Source of Funds * (select all that apply)</label>
+    <div class="checkbox-group">
+      <div class="checkbox-item">
+        <input type="checkbox" id="s16-sof-business" />
+        <label for="s16-sof-business">Business income</label>
       </div>
-      <div class="choice-btn" id="q1-priv-btn" onclick="pickQ1('private')">
-        <input type="radio" name="q1" id="q1-priv" value="private"> <span class="choice-label">Private Client</span>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s16-sof-savings" />
+        <label for="s16-sof-savings">Personal savings</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s16-sof-investment" />
+        <label for="s16-sof-investment">Investment proceeds</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s16-sof-assets" />
+        <label for="s16-sof-assets">Sale of assets</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s16-sof-other" />
+        <label for="s16-sof-other">Other</label>
       </div>
     </div>
-    <div id="q1-error" class="form-error-msg">Please select a client type.</div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="submitQ1()">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-s1')">&#8592; Back</button>
-    </div>
+    <div class="err" id="err-s16-sof">Please select at least one source of funds.</div>
   </div>
 
-  <!-- ════════════════════════════════════════════
-       S2 – APPLICANT DETAILS (CORPORATE)
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s2">
-    <h2 class="section-title">Applicant Details (Corporate)</h2>
-    <div class="section-desc">
-      <p>We'll start with a few personal details about the main applicant.</p>
-      <p>This should be the individual completing this form and acting as our primary point of contact for the business.</p>
-    </div>
-    <div class="field" id="f-s2-title">
-      <label>Title<span class="req">*</span></label>
-      <select id="s2-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
-      <span class="field-error">Please select a title.</span>
-    </div>
-    <div class="field" id="f-s2-name">
-      <label>Full legal name<span class="req">*</span></label>
-      <input type="text" id="s2-name" placeholder="e.g. John Alexander Smith">
-      <span class="field-error">Please enter your full legal name.</span>
-    </div>
-    <div class="field" id="f-s2-dob">
-      <label>Date of birth<span class="req">*</span></label>
-      <div class="dob-row">
-        <input type="text" id="s2-dd" placeholder="DD" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s2-mm" placeholder="MM" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s2-yyyy" placeholder="YYYY" maxlength="4">
+  <div class="field-group">
+    <label>Purpose of Account *</label>
+    <textarea id="s16-purpose" placeholder="e.g. paying international suppliers, hedging currency exposure, receiving client payments"></textarea>
+    <div class="err" id="err-s16-purpose">Please describe the purpose of the account.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s13')">Back</button>
+    <button class="btn" onclick="submitS16()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S17 — Account Usage (Private) ══ -->
+<div id="scr-s17" class="screen">
+  <p class="section-title">Account Usage</p>
+  <p class="section-desc">We'll now ask a few questions about how you expect to use your account. This includes the purpose of the account, expected transaction volumes, and the source and destination of funds.</p>
+
+  <div class="field-group">
+    <label>Base Currency *</label>
+    <select id="s17-basecurrency">
+      <option value="">Please select</option>
+      <option>GBP – British Pound</option><option>EUR – Euro</option><option>USD – US Dollar</option>
+      <option>AED – UAE Dirham</option><option>AUD – Australian Dollar</option><option>CAD – Canadian Dollar</option>
+      <option>CHF – Swiss Franc</option><option>CNY – Chinese Yuan</option><option>HKD – Hong Kong Dollar</option>
+      <option>JPY – Japanese Yen</option><option>NOK – Norwegian Krone</option><option>NZD – New Zealand Dollar</option>
+      <option>SEK – Swedish Krona</option><option>SGD – Singapore Dollar</option><option>Z<option>ZAR – South African Rand</option>
+    </select>
+    <div class="err" id="err-s17-basecurrency">Please select a base currency.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Which currencies do you intend to trade? *</label>
+    <input type="text" id="s17-currencies" placeholder="e.g. GBP, EUR, USD" />
+    <div class="err" id="err-s17-currencies">Please enter the currencies you intend to trade.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Estimated Monthly Transaction Volume *</label>
+    <select id="s17-monthlyvolume">
+      <option value="">Please select</option>
+      <option>Under £10,000</option><option>£10,000 – £50,000</option><option>£50,000 – £100,000</option>
+      <option>£100,000 – £500,000</option><option>£500,000 – £1,000,000</option><option>Over £1,000,000</option>
+    </select>
+    <div class="err" id="err-s17-monthlyvolume">Please select an estimated monthly volume.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Estimated Number of Transactions per Month *</label>
+    <select id="s17-txcount">
+      <option value="">Please select</option>
+      <option>1 – 5</option><option>6 – 10</option><option>11 – 20</option>
+      <option>21 – 50</option><option>More than 50</option>
+    </select>
+    <div class="err" id="err-s17-txcount">Please select an estimated transaction count.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Country / Countries of Origin for Funds *</label>
+    <input type="text" id="s17-fundorigin" placeholder="e.g. United Kingdom, France" />
+    <div class="err" id="err-s17-fundorigin">Please enter the country or countries of origin for funds.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Destination of Payments *</label>
+    <input type="text" id="s17-destination" placeholder="e.g. Spain, Portugal" />
+    <div class="err" id="err-s17-destination">Please enter the destination of payments.</div>
+  </div>
+
+  <div class="field-group">
+    <label>Source of Funds * (select all that apply)</label>
+    <div class="checkbox-group">
+      <div class="checkbox-item">
+        <input type="checkbox" id="s17-sof-business" />
+        <label for="s17-sof-business">Business income</label>
       </div>
-      <span class="field-error">Please enter a valid date of birth.</span>
-    </div>
-    <div class="field" id="f-s2-nat">
-      <label>Nationality<span class="req">*</span></label>
-      <input type="text" id="s2-nat" placeholder="e.g. British">
-      <span class="field-error">Please enter your nationality.</span>
-    </div>
-    <div class="field" id="f-s2-addr">
-      <label>Residential address<span class="req">*</span></label>
-      <textarea id="s2-addr" placeholder="Your full residential address"></textarea>
-      <span class="field-error">Please enter your residential address.</span>
-    </div>
-    <div class="field" id="f-s2-email">
-      <label>Email address<span class="req">*</span></label>
-      <input type="email" id="s2-email" placeholder="name@example.com">
-      <span class="field-error">Please enter a valid email address.</span>
-    </div>
-    <div class="field" id="f-s2-mob">
-      <label>Mobile number<span class="req">*</span></label>
-      <input type="tel" id="s2-mob" placeholder="+44 7400 123456">
-      <span class="field-error">Please enter your mobile number.</span>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="validateSection('s2', ['s2-title','s2-name','s2-dob','s2-nat','s2-addr','s2-email','s2-mob'], 'scr-s4')">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-q1')">&#8592; Back</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       S3 – APPLICANT DETAILS (PRIVATE CLIENT)
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s3">
-    <h2 class="section-title">Applicant Details (Private Client)</h2>
-    <div class="section-desc">
-      <p>We'll start with a few personal details about you, as the primary account holder.</p>
-    </div>
-    <div class="field" id="f-s3-title">
-      <label>Title<span class="req">*</span></label>
-      <select id="s3-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
-      <span class="field-error">Please select a title.</span>
-    </div>
-    <div class="field" id="f-s3-name">
-      <label>Full legal name<span class="req">*</span></label>
-      <input type="text" id="s3-name" placeholder="e.g. John Alexander Smith">
-      <span class="field-error">Please enter your full legal name.</span>
-    </div>
-    <div class="field" id="f-s3-dob">
-      <label>Date of birth<span class="req">*</span></label>
-      <div class="dob-row">
-        <input type="text" id="s3-dd" placeholder="DD" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s3-mm" placeholder="MM" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s3-yyyy" placeholder="YYYY" maxlength="4">
+      <div class="checkbox-item">
+        <input type="checkbox" id="s17-sof-savings" />
+        <label for="s17-sof-savings">Personal savings</label>
       </div>
-      <span class="field-error">Please enter a valid date of birth.</span>
-    </div>
-    <div class="field" id="f-s3-nat">
-      <label>Nationality<span class="req">*</span></label>
-      <input type="text" id="s3-nat" placeholder="e.g. British">
-      <span class="field-error">Please enter your nationality.</span>
-    </div>
-    <div class="field" id="f-s3-addr">
-      <label>Residential address<span class="req">*</span></label>
-      <textarea id="s3-addr" placeholder="Your full residential address"></textarea>
-      <span class="field-error">Please enter your residential address.</span>
-    </div>
-    <div class="field" id="f-s3-email">
-      <label>Email address<span class="req">*</span></label>
-      <input type="email" id="s3-email" placeholder="name@example.com">
-      <span class="field-error">Please enter a valid email address.</span>
-    </div>
-    <div class="field" id="f-s3-mob">
-      <label>Mobile number<span class="req">*</span></label>
-      <input type="tel" id="s3-mob" placeholder="+44 7400 123456">
-      <span class="field-error">Please enter your mobile number.</span>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="validateSection('s3', ['s3-title','s3-name','s3-dob','s3-nat','s3-addr','s3-email','s3-mob'], 'scr-s17')">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-q1')">&#8592; Back</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       S4 – COMPANY DETAILS
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s4">
-    <h2 class="section-title">Company Details</h2>
-    <div class="section-desc">
-      <p>Next, we'll ask for some basic information about the business itself.</p>
-      <p>This allows us to identify the company correctly and understand the nature of its activity.</p>
-    </div>
-    <div class="field" id="f-s4-cn">
-      <label>Registered company name<span class="req">*</span></label>
-      <input type="text" id="s4-cn" placeholder="e.g. Acme Holdings Ltd">
-      <span class="field-error">Please enter the registered company name.</span>
-    </div>
-    <div class="field" id="f-s4-ci">
-      <label>Country of incorporation<span class="req">*</span></label>
-      <input type="text" id="s4-ci" placeholder="e.g. United Kingdom">
-      <span class="field-error">Please enter the country of incorporation.</span>
-    </div>
-    <div class="field" id="f-s4-rn">
-      <label>Company registration number<span class="req">*</span></label>
-      <div class="field-hint">If no registration number, please provide the date of incorporation and the registered office address.</div>
-      <textarea id="s4-rn" placeholder="e.g. 12345678"></textarea>
-      <span class="field-error">Please complete this field.</span>
-    </div>
-    <div class="field" id="f-s4-bs">
-      <label>Business sector and type of activity<span class="req">*</span></label>
-      <textarea id="s4-bs" placeholder="e.g. Financial services – foreign exchange brokerage"></textarea>
-      <span class="field-error">Please describe your business sector and activity.</span>
-    </div>
-    <div class="field">
-      <label>Company website (if applicable)</label>
-      <input type="text" id="s4-web" placeholder="e.g. https://www.yourcompany.com">
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="validateSection('s4', ['s4-cn','s4-ci','s4-rn','s4-bs'], 'scr-s5')">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-s2')">&#8592; Back</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       S5 – DIRECTORS
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s5">
-    <h2 class="section-title">Directors</h2>
-    <div class="section-desc">
-      <p>We now need to confirm the company's directors.</p>
-      <p>Depending on your company structure, we may require details for one or more directors. If you are a sole director, you'll be able to confirm that here.</p>
-    </div>
-    <div class="field" id="f-s5-isdir">
-      <label>Are you a registered company director?<span class="req">*</span></label>
-      <div class="choice-list">
-        <div class="choice-btn" id="s5dir-yes-btn" onclick="pickRadio('s5dir','yes')">
-          <input type="radio" name="s5dir" value="yes" id="s5dir-yes"><span class="choice-label">Yes</span>
-        </div>
-        <div class="choice-btn" id="s5dir-no-btn" onclick="pickRadio('s5dir','no')">
-          <input type="radio" name="s5dir" value="no" id="s5dir-no"><span class="choice-label">No</span>
-        </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s17-sof-investment" />
+        <label for="s17-sof-investment">Investment proceeds</label>
       </div>
-      <span class="field-error" id="s5-err1">Please select an option.</span>
-    </div>
-    <div class="field" id="f-s5-num">
-      <label>How many directors does the company have?<span class="req">*</span></label>
-      <div class="choice-list">
-        <div class="choice-btn" id="s5num-sole-btn" onclick="pickRadio('s5num','sole')">
-          <input type="radio" name="s5num" value="sole" id="s5num-sole"><span class="choice-label">Sole director</span>
-        </div>
-        <div class="choice-btn" id="s5num-more-btn" onclick="pickRadio('s5num','more')">
-          <input type="radio" name="s5num" value="more" id="s5num-more"><span class="choice-label">More than one</span>
-        </div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s17-sof-assets" />
+        <label for="s17-sof-assets">Sale of assets</label>
       </div>
-      <span class="field-error" id="s5-err2">Please select an option.</span>
-    </div>
-    <div id="s5-form-err" class="form-error-msg">Please answer both questions above.</div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="submitS5()">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-s4')">&#8592; Back</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       S6 – DIRECTOR DETAILS 1
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s6">
-    <h2 class="section-title">Director Details</h2>
-    <div class="section-desc">
-      <p>We usually need details for two company directors.</p>
-      <p>If you are a director, please give details for one other director.</p>
-      <p>If you selected "sole director" and that person is not you, please enter their details here.</p>
-    </div>
-    <div class="field" id="f-s6-title">
-      <label>Title<span class="req">*</span></label>
-      <select id="s6-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
-      <span class="field-error">Please select a title.</span>
-    </div>
-    <div class="field" id="f-s6-name">
-      <label>Full name<span class="req">*</span></label>
-      <input type="text" id="s6-name" placeholder="Director's full name">
-      <span class="field-error">Please enter the director's full name.</span>
-    </div>
-    <div class="field" id="f-s6-dob">
-      <label>Date of birth<span class="req">*</span></label>
-      <div class="dob-row">
-        <input type="text" id="s6-dd" placeholder="DD" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s6-mm" placeholder="MM" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s6-yyyy" placeholder="YYYY" maxlength="4">
-      </div>
-      <span class="field-error">Please enter a valid date of birth.</span>
-    </div>
-    <div class="field" id="f-s6-nat">
-      <label>Nationality<span class="req">*</span></label>
-      <input type="text" id="s6-nat" placeholder="e.g. British">
-      <span class="field-error">Please enter their nationality.</span>
-    </div>
-    <div class="field" id="f-s6-addr">
-      <label>Residential address<span class="req">*</span></label>
-      <textarea id="s6-addr" placeholder="Director's full residential address"></textarea>
-      <span class="field-error">Please enter their residential address.</span>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="submitS6()">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-s5')">&#8592; Back</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       S7 – DIRECTOR DETAILS 2
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s7">
-    <h2 class="section-title">Director Details (Second Director)</h2>
-    <div class="section-desc">
-      <p>Please provide details for the second director.</p>
-    </div>
-    <div class="field" id="f-s7-title">
-      <label>Title<span class="req">*</span></label>
-      <select id="s7-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option></select>
-      <span class="field-error">Please select a title.</span>
-    </div>
-    <div class="field" id="f-s7-name">
-      <label>Full name<span class="req">*</span></label>
-      <input type="text" id="s7-name" placeholder="Director's full name">
-      <span class="field-error">Please enter the director's full name.</span>
-    </div>
-    <div class="field" id="f-s7-dob">
-      <label>Date of birth<span class="req">*</span></label>
-      <div class="dob-row">
-        <input type="text" id="s7-dd" placeholder="DD" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s7-mm" placeholder="MM" maxlength="2">
-        <span class="dob-sep">/</span>
-        <input type="text" id="s7-yyyy" placeholder="YYYY" maxlength="4">
-      </div>
-      <span class="field-error">Please enter a valid date of birth.</span>
-    </div>
-    <div class="field" id="f-s7-nat">
-      <label>Nationality<span class="req">*</span></label>
-      <input type="text" id="s7-nat" placeholder="e.g. British">
-      <span class="field-error">Please enter their nationality.</span>
-    </div>
-    <div class="field" id="f-s7-addr">
-      <label>Residential address<span class="req">*</span></label>
-      <textarea id="s7-addr" placeholder="Director's full residential address"></textarea>
-      <span class="field-error">Please enter their residential address.</span>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="validateSection('s7', ['s7-title','s7-name','s7-dob','s7-nat','s7-addr'], 'scr-s8')">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-s6')">&#8592; Back</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════
-       S8 – OWNERSHIP / BENEFICIAL OWNERS
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s8">
-    <h2 class="section-title">Ownership (Beneficial Owners)</h2>
-    <div class="section-desc">
-      <p>We also need to understand the ownership structure of the business.</p>
-      <p>Specifically, we are required to identify any individuals who own twenty-five percent or more of the company. If there are no individuals above this threshold, you can simply confirm that.</p>
-    </div>
-    <div class="field" id="f-s8-own">
-      <label>How many individuals own 25% or more of the company?<span class="req">*</span></label>
-      <div class="choice-list">
-        <div class="choice-btn" onclick="pickRadio('s8own','0')"><input type="radio" name="s8own" value="0"><span class="choice-label">0</span></div>
-        <div class="choice-btn" onclick="pickRadio('s8own','1')"><input type="radio" name="s8own" value="1"><span class="choice-label">1</span></div>
-        <div class="choice-btn" onclick="pickRadio('s8own','2')"><input type="radio" name="s8own" value="2"><span class="choice-label">2</span></div>
-        <div class="choice-btn" onclick="pickRadio('s8own','3')"><input type="radio" name="s8own" value="3"><span class="choice-label">3</span></div>
-        <div class="choice-btn" onclick="pickRadio('s8own','4')"><input type="radio" name="s8own" value="4"><span class="choice-label">4</span></div>
+      <div class="checkbox-item">
+        <input type="checkbox" id="s17-sof-other" />
+        <label for="s17-sof-other">Other</label>
       </div>
     </div>
-    <div id="s8-err" class="form-error-msg">Please select an option.</div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="submitS8()">Continue</button>
-      <button class="btn-back" onclick="showScreen('scr-s5')">&#8592; Back</button>
-    </div>
+    <div class="err" id="err-s17-sof">Please select at least one source of funds.</div>
   </div>
 
-  <!-- ════════════════════════════════════════════
-       S9 – BENEFICIAL OWNER 1
-  ════════════════════════════════════════════ -->
-  <div class="screen" id="scr-s9">
-    <h2 class="section-title">Beneficial Owner 1</h2>
-    <div class="section-desc"><p>Please provide details for the first individual who owns 25% or more of the company.</p></div>
-    <div class="field" id="f-s9-title"><label>Title<span class="req">*</span></label><select id="s9-title"><option value="">Select…</option><option>Mr</option><option>Mrs</option><option>Miss</option><option
+  <div class="field-group">
+    <label>Purpose of Account *</label>
+    <textarea id="s17-purpose" placeholder="e.g. property purchase, paying overheads, receiving salary"></textarea>
+    <div class="err" id="err-s17-purpose">Please describe the purpose of the account.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s3')">Back</button>
+    <button class="btn" onclick="submitS17()">Next</button>
+  </div>
+</div>
+
+<!-- ══ S18 — Third Party Payments ══ -->
+<div id="scr-s18" class="screen">
+  <p class="section-title">Third Party Payments</p>
+  <p class="section-desc">Do you intend to receive funds from third parties? If so, please provide details on who these funds will be coming from (e.g. customers), their country of origin, and some supporting contextual information.</p>
+
+  <div class="field-group">
+    <label>Third Party Payment Details</label>
+    <textarea id="s18-thirdparty" placeholder="Please describe any expected third party payments, who they are from, and which countries they originate from. If you do not expect any third party payments, you may leave this blank or write 'None'."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" id="s18-back-btn" onclick="goBackFromS18()">Back</button>
+    <button class="btn" onclick="showScreen('scr-s19')">Next</button>
+  </div>
+</div>
+
+<!-- ══ S19 — Document Upload ══ -->
+<div id="scr-s19" class="screen">
+  <p class="section-title">Document Upload</p>
+  <p class="section-desc">Please upload any supporting documents at this stage. This may include a copy of your passport, proof of address, or company documents. Maximum file size: 10MB.</p>
+
+  <div class="file-upload-area" onclick="document.getElementById('s19-file').click()">
+    <input type="file" id="s19-file" onchange="handleFileSelect()" />
+    <p>Click here to select a file</p>
+    <p>Maximum file size: 10MB</p>
+  </div>
+  <div id="file-name-display"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s18')">Back</button>
+    <button class="btn" onclick="showScreen('scr-s20')">Next</button>
+  </div>
+</div>
+
+<!-- ══ S20 — Terms & Conditions ══ -->
+<div id="scr-s20" class="screen">
+  <p class="section-title">K2 FX – Client Terms, Liquidity Provider Terms &amp; Privacy Notices</p>
+  <p class="section-desc">Please read the terms and conditions carefully before proceeding.</p>
+
+  <div class="terms-box">
+    <p>By submitting this form, you confirm that the information provided is accurate and complete to the best of your knowledge. You agree to the K2 FX Client Terms and Conditions, Liquidity Provider Terms, and Privacy Notice.</p>
+    <br/>
+    <p>K2 FX is committed to protecting your personal data in accordance with applicable data protection laws. Your information will be used solely for the purposes of onboarding and account management.</p>
+    <br/>
+    <p>You can read the full terms and conditions at: <a href="https://www.k2-fx.com/terms-and-conditions" target="_blank">https://www.k2-fx.com/terms-and-conditions</a></p>
+    <br/>
+    <p>If you have any questions about these terms, please contact us before submitting this form.</p>
+  </div>
+
+  <label class="check-row">
+    <input type="checkbox" id="s20-terms" />
+    <span>I have read and accept the K2 FX Client Terms and Conditions, Liquidity Provider Terms, and Privacy Notice.</span>
+  </label>
+  <div class="err" id="err-s20-terms">You must accept the terms and conditions to continue.</div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s19')">Back</button>
+    <button class="btn" onclick="submitS20()">Next</button>
+  </div>
+</div>
+
+<!-- ══ SUBMIT SCREEN ══ -->
+<div id="scr-submit" class="screen statement-screen">
+  <h2>Almost There</h2>
+  <p>Thank you for completing the form. Please review your details before submitting. Once you click Submit, your application will be sent to the K2 FX team for review.</p>
+  <p>If you need to go back and make any changes, use the Back button below.</p>
+  <div id="submit-loading">Submitting your application, please wait...</div>
+  <div id="submit-error">There was a problem submitting your form. Please try again or contact us directly.</div>
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="showScreen('scr-s20')">Back</button>
+    <button class="btn" onclick="submitFinal()">Submit Application</button>
+  </div>
+</div>
+
+<!-- ══ THANK YOU ══ -->
+<div id="scr-thankyou" class="screen">
+  <div class="logo-wrap">
+    <img src="logo.png" alt="K2 FX" />
+  </div>
+  <h2>Thank You</h2>
+  <p>Thank you for completing the K2 FX onboarding form. We will review your information and contact you shortly.</p>
+</div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+  // ════════════════════════════════════════════════
+  // SUPABASE SETUP
+  // Replace YOUR_SUPABASE_URL and YOUR_SUPABASE_KEY
+  // with your actual values from your Supabase project
+  // ════════════════════════════════════════════════
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ── State variables ──
+  let clientType = '';       // 'corporate' or 'private'
+  let numDirectors = '';     // 'sole' or 'more'
+  let isDirector = '';       // 'yes' or 'no'
+  let numOwners = 0;
+  let numUsers = 0;
+
+  // ── Screen order for progress bar ──
+  const allScreens = [
+    'scr-welcome','scr-s1','scr-q1',
+    'scr-s2','scr-s3','scr-s4','scr-s5','scr-s6','scr-s7','scr-s8',
+    'scr-s9','scr-s10','scr-s11','scr-s12',
+    'scr-s13','scr-s14','scr-s15',
+    'scr-s16','scr-s17','scr-s18','scr-s19','scr-s20',
+    'scr-submit','scr-thankyou'
+  ];
+
+  // ════════════════════════════════════════════════
+  // NAVIGATION — showScreen(id)
+  // Hides all screens, shows the one you want,
+  // scrolls to top, and updates the progress bar
+  // ════════════════════════════════════════════════
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo(0, 0);
+      const idx = allScreens.indexOf(id);
+      const pct = idx <= 0 ? 0 : Math.round((idx / (allScreens.length - 1)) * 100);
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+  }
+
+  // ════════════════════════════════════════════════
+  // CHOICE BUTTON HELPERS
+  // ════════════════════════════════════════════════
+
+  // For Q1 — Corporate or Private
+  function pickQ1(value) {
+    clientType = value;
+    document.getElementById('q1-corporate').classList.toggle('selected', value === 'corporate');
+    document.getElementById('q1-private').classList.toggle('selected', value === 'private');
+  }
+
+  // For any radio-style choice group (e.g. s5-director, s8-owners)
+  function pickRadio(name, value) {
+    // Remove selected from all buttons in this group
+    document.querySelectorAll('[id^="' + name + '-"]').forEach(btn => {
+      btn.classList.remove('selected');
+    });
+    // Add selected to the chosen button
+    const chosen = document.getElementById(name + '-' + value);
+    if (chosen) chosen.classList.add('selected');
+
+    // Store the value in our state variables
+    if (name === 's5-director') {
+      isDirector = value;
+      // Show/hide the "how many directors" question
+      document.getElementById('s5-numdirectors-group').style.display =
+        (value === 'yes') ? 'block' : 'none';
+      if (value === 'no') numDirectors = '';
+    }
+    if (name === 's5-numdirectors') numDirectors = value;
+    if (name === 's8-owners') numOwners = parseInt(value);
+    if (name === 's13-users') numUsers = parseInt(value);
+  }
+
+  // ════════════════════════════════════════════════
+  // VALIDATION HELPER
+  // Checks that a field has a value; shows/hides error
+  // ════════════════════════════════════════════════
+  function validate(fieldId, errorId) {
+    const el = document.getElementById(fieldId);
+    const err = document.getElementById(errorId);
+    if (!el || !err) return true;
+    const val = el.value ? el.value.trim() : '';
+    if (!val) {
+      err.style.display = 'block';
+      return false;
+    }
+    err.style.display = 'none';
+    return true;
+  }
+
+  function hideErr(errorId) {
+    const el = document.getElementById(errorId);
+    if (el) el.style.display = 'none';
+  }
+
+  // ════════════════════════════════════════════════
+  // SECTION SUBMIT FUNCTIONS
+  // Each one validates required fields then
+  // routes to the correct next screen
+  // ════════════════════════════════════════════════
+
+  function submitQ1() {
+    if (!clientType) {
+      document.getElementById('q1-corporate').style.border = '1.5px solid #c0392b';
+      return;
+    }
+    if (clientType === 'corporate') showScreen('scr-s2');
+    else showScreen('scr-s3');
+  }
+
+  function submitS2() {
+    let ok = true;
+    ok = validate('s2-title','err-s2-title') && ok;
+    ok = validate('s2-fullname','err-s2-fullname') && ok;
+    ok = validate('s2-dob','err-s2-dob') && ok;
+    ok = validate('s2-nationality','err-s2-nationality') && ok;
+    ok = validate('s2-address','err-s2-address') && ok;
+    ok = validate('s2-email','err-s2-email') && ok;
+    ok = validate('s2-mobile','err-s2-mobile') && ok;
+    if (ok) showScreen('scr-s4');
+  }
+
+  function submitS3() {
+    let ok = true;
+    ok = validate('s3-title','err-s3-title') && ok;
+    ok = validate('s3-fullname','err-s3-fullname') && ok;
+    ok = validate('s3-dob','err-s3-dob') && ok;
+    ok = validate('s3-nationality','err-s3-nationality') && ok;
+    ok = validate('s3-address','err-s3-address') && ok;
+    ok = validate('s3-email','err-s3-email') && ok;
+    ok = validate('s3-mobile','err-s3-mobile') && ok;
+    if (ok) showScreen('scr-s17');
+  }
+
+  function submitS4() {
+    let ok = true;
+    ok = validate('s4-companyname','err-s4-companyname') && ok;
+    ok = validate('s4-country','err-s4-country') && ok;
+    ok = validate('s4-regnumber','err-s4-regnumber') && ok;
+    ok = validate('s4-sector','err-s4-sector') && ok;
+    if (ok) showScreen('scr-s5');
+  }
+
+  function submitS5() {
+    let ok = true;
+    // Validate director yes/no
+    if (!isDirector) {
+      document.getElementById('err-s5-director').style.display = 'block';
+      ok = false;
+    } else {
+      hideErr('err-s5-director');
+    }
+    // If yes, validate number of directors
+    if (isDirector === 'yes' && !numDirectors) {
+      document.getElementById('err-s5-numdirectors').style.display = 'block';
+      ok = false;
+    } else {
+      hideErr('err-s5-numdirectors');
+    }
+    if (!ok) return;
+
+    // Routing logic:
+    // Director = yes AND sole director → skip director details, go to S8
+    // Director = yes AND more than one → go to S6 (other director details)
+    // Director = no → go to S6 (director details needed)
+    if (isDirector === 'yes' && numDirectors === 'sole') {
+      showScreen('scr-s8');
+    } else {
+      showScreen('scr-s6');
+    }
+  }
+
+  function submitS6() {
+    let ok = true;
+    ok = validate('s6-title','err-s6-title') && ok;
+    ok = validate('s6-fullname','err-s6-fullname') && ok;
+    ok = validate('s6-dob','err-s6-dob') && ok;
+    ok = validate('s6-nationality','err-s6-nationality') && ok;
+    ok = validate('s6-address','err-s6-address') && ok;
+    if (!ok) return;
+
+    // If more than one director, go to S7 for second director
+    // Otherwise go to S8
+    if (numDirectors === 'more') {
+      showScreen('scr-s7');
+    } else {
+      showScreen('scr-s8');
+    }
+  }
+
+  function submitS7() {
+    let ok = true;
+    ok = validate('s7-title','err-s7-title') && ok;
+    ok = validate('s7-fullname','err-s7-fullname') && ok;
+    ok = validate('s7-dob','err-s7-dob') && ok;
+    ok = validate('s7-nationality','err-s7-nationality') && ok;
+    ok = validate('s7-address','err-s7-address') && ok;
+    if (ok) showScreen('scr-s8');
+  }
+
+  function goBackFromS8() {
+    // Back button on S8 depends on how we got here
+    if (isDirector === 'yes' && numDirectors === 'sole') {
+      showScreen('scr-s5');
+    } else if (numDirectors === 'more') {
+      showScreen('scr-s7');
+    } else {
+      showScreen('scr-s6');
+    }
+  }
+
+  function submitS8() {
+    if (isNaN(numOwners) || document.querySelectorAll('[id^="s8-owners-"].selected').length === 0) {
+      document.getElementById('err-s8-owners').style.display = 'block';
+      return;
+    }
+    hideErr('err-s8-owners');
+    // Route based on number of beneficial owners
+    if (numOwners === 0) showScreen('scr-s13');
+    else showScreen('scr-s9');
+  }
+
+  function submitS9() {
+    let ok = true;
+    ok = validate('s9-title','err-s9-title') && ok;
+    ok = validate('s9-fullname','err-s9-fullname') && ok;
+    ok = validate('s9-dob','err-s9-dob') && ok;
+    ok = validate('s9-nationality','err-s9-nationality') && ok;
+    ok = validate('s9-address','err-s9-address') && ok;
+    ok = validate('s9-shareholding','err-s9-shareholding') && ok;
+    if (!ok) return;
+    if (numOwners >= 2) showScreen('scr-s10');
+    else showScreen('scr-s13');
+  }
+
+  function submitS10() {
+    let ok = true;
+    ok = validate('s10-title','err-s10-title') && ok;
+    ok = validate('s10-fullname','err-s10-fullname') && ok;
+    ok = validate('s10-dob','err-s10-dob') && ok;
+    ok = validate('s10-nationality','err-s10-nationality') && ok;
+    ok = validate('s10-address','err-s10-address') && ok;
+    ok = validate('s10-shareholding','err-s10-shareholding') && ok;
+    if (!ok) return;
+    if (numOwners >= 3) showScreen('scr-s11');
+    else showScreen('scr-s13');
+  }
+
+  function submitS11() {
+    let ok = true;
+    ok = validate('s11-title','err-s11-title') && ok;
+    ok = validate('s11-fullname','err-s11-fullname') && ok;
+    ok = validate('s11-dob','err-s11-dob') && ok;
+    ok = validate('s11-nationality','err-s11-nationality') && ok;
+    ok = validate('s11-address','err-s11-address') && ok;
+    ok = validate('s11-shareholding','err-s11-shareholding') && ok;
+    if (!ok) return;
+    if (numOwners >= 4) showScreen('scr-s12');
+    else showScreen('scr-s13');
+  }
+
+  function submitS12() {
+    let ok = true;
+    ok = validate('s12-title','err-s12-title') && ok;
+    ok = validate('s12-fullname','err-s12-fullname') && ok;
+    ok = validate('s12-dob','err-s12-dob') && ok;
+    ok = validate('s12-nationality','err-s12-nationality') && ok;
+    ok = validate('s12-address','err-s12-address') && ok;
+    ok = validate('s12-shareholding','err-s12-shareholding') && ok;
+    if (ok) showScreen('scr-s13');
+  }
+
+  function submitS13() {
+    if (document.querySelectorAll('[id^="s13-users-"].selected').length === 0) {
+      document.getElementById('err-s13-users').style.display = 'block';
+      return;
+    }
+    hideErr('err-s13-users');
+    if (numUsers === 0) showScreen('scr-s16');
+    else showScreen('scr-s14');
+  }
+
+  function submitS14() {
+    let ok = true;
+    ok = validate('s14-title','err-s14-title') && ok;
+    ok = validate('s14-fullname','err-s14-fullname') && ok;
+    ok = validate('s14-dob','err-s14-dob') && ok;
+    ok = validate('s14-nationality','err-s14-nationality') && ok;
+    ok = validate('s14-email','err-s14-email') && ok;
+    if (!ok) return;
+    if (numUsers >= 2) showScreen('scr-s15');
+    else showScreen('scr-s16');
+  }
+
+  function submitS15() {
+    let ok = true;
+    ok = validate('s15-title','err-s15-title') && ok;
+    ok = validate('s15-fullname','err-s15-fullname') && ok;
+    ok = validate('s15-dob','err-s15-dob') && ok;
+    ok = validate('s15-nationality','err-s15-nationality') && ok;
+    ok = validate('s15-email','err-s15-email') && ok;
+    if (ok) showScreen('scr-s16');
+  }
+
+  function submitS16() {
+    let ok = true;
+    ok = validate('s16-basecurrency','err-s16-basecurrency') && ok;
+    ok = validate('s16-currencies','err-s16-currencies') && ok;
+    ok = validate('s16-monthlyvolume','err-s16-monthlyvolume') && ok;
+    ok = validate('s16-txcount','err-s16-txcount') && ok;
+    ok = validate('s16-fundorigin','err-s16-fundorigin') && ok;
+    ok = validate('s16-destination','err-s16-destination') && ok;
+    ok = validate('s16-purpose','err-s16-purpose') && ok;
+    // Check at least one source of funds checkbox is ticked
+    const sofChecked = ['s16-sof-business','s16-sof-savings','s16-sof-investment','s16-sof-assets','s16-sof-other']
+      .some(id => document.getElementById(id).checked);
+    if (!sofChecked) {
+      document.getElementById('err-s16-sof').style.display = 'block';
+      ok = false;
+    } else {
+      hideErr('err-s16-sof');
+    }
+    if (ok) showScreen('scr-s18');
+  }
+
+  function submitS17() {
+    let ok = true;
+    ok = validate('s17-basecurrency','err-s17-basecurrency') && ok;
+    ok = validate('s17-currencies','err-s17-currencies') && ok;
+    ok = validate('s17-monthlyvolume','err-s17-monthlyvolume') && ok;
+    ok = validate('s17-txcount','err-s17-txcount') && ok;
+    ok = validate('s17-fundorigin','err-s17-fundorigin') && ok;
+    ok = validate('s17-destination','err-s17-destination') && ok;
+    ok = validate('s17-purpose','err-s17-purpose') && ok;
+    const sofChecked = ['s17-sof-business','s17-sof-savings','s17-sof-investment','s17-sof-assets','s17-sof-other']
+      .some(id => document.getElementById(id).checked);
+    if (!sofChecked) {
+      document.getElementById('err-s17-sof').style.display = 'block';
+      ok = false;
+    } else {
+      hideErr('err-s17-sof');
+    }
+    if (ok) showScreen('scr-s18');
+  }
+
+  function goBackFromS18() {
+    if (clientType === 'corporate') showScreen('scr-s16');
+    else showScreen('scr-s17');
+  }
+
+  function submitS20() {
+    const terms = document.getElementById('s20-terms');
+    if (!terms.checked) {
+      document.getElementById('err-s20-terms').style.display = 'block';
+      return;
+    }
+    hideErr('err-s20-terms');
+    showScreen('scr-submit');
+  }
+
+  function handleFileSelect() {
+    const file = document.getElementById('s19-file').files[0];
+    const display = document.getElementById('file-name-display');
+    if (file) display.textContent = 'Selected: ' + file.name;
+    else display.textContent = '';
+  }
+
+  // ════════════════════════════════════════════════
+  // FINAL SUBMISSION — sends all data to Supabase
+  // ════════════════════════════════════════════════
+  async function submitFinal() {
+    const loadingEl = document.getElementById('submit-loading');
+    const errorEl = document.getElementById('submit-error');
+    loadingEl.style.display = 'block';
+    errorEl.style.display = 'none';
+
+    // Gather source of funds
+    function getSOF(prefix) {
+      const items = [];
+      if (document.getElementById(prefix+'-sof-business').checked) items.push('Business income');
+      if (document.getElementById(prefix+'-sof-savings').checked) items.push('Personal savings');
+      if (document.getElementById(prefix+'-sof-investment').checked) items.push('Investment proceeds');
+      if (document.getElementById(prefix+'-sof-assets').checked) items.push('Sale of assets');
+      if (document.getElementById(prefix+'-sof-other').checked) items.push('Other');
+      return items.join(', ');
+    }
+
+    function val(id) {
+      const el = document.getElementById(id);
+      return el ? (el.value || '').trim() : '';
+    }
+
+    const payload = {
+      client_type: clientType,
+
+      // Applicant (corporate path uses S2, private uses S3)
+      applicant_title:       clientType === 'corporate' ? val('s2-title') : val('s3-title'),
+      applicant_fullname:    clientType === 'corporate' ? val('s2-fullname') : val('s3-fullname'),
+      applicant_dob:         clientType === 'corporate' ? val('s2-dob') : val('s3-dob'),
+      applicant_nationality: clientType === 'corporate' ? val('s2-nationality') : val('s3-nationality'),
+      applicant_address:     clientType === 'corporate' ? val('s2-address') : val('s3-address'),
+      applicant_email:       clientType === 'corporate' ? val('s2-email') : val('s3-email'),
+      applicant_mobile:      clientType === 'corporate' ? val('s2-mobile') : val('s3-mobile'),
+
+      // Company (corporate only)
+      company_name:          val('s4-companyname'),
+      company_country:       val('s4-country'),
+      company_regnumber:     val('s4-regnumber'),
+      company_sector:        val('s4-sector'),
+      company_website:       val('s4-website'),
+
+      // Directors
+      is_director:           isDirector,
+      num_directors:         numDirectors,
+      director1_title:       val('s6-title'),
+      director1_fullname:    val('s6-fullname'),
+      director1_dob:         val('s6-dob'),
+      director1_nationality: val('s6-nationality'),
+      director1_address:     val('s6-address'),
+      director2_title:       val('s7-title'),
+      director2_fullname:    val('s7-fullname'),
+      director2_dob:         val('s7-dob'),
+      director2_nationality: val('s7-nationality'),
+      director2_address:     val('s7-address'),
+
+      // Beneficial owners
+      num_beneficial_owners: numOwners,
+      owner1_title:          val('s9-title'),
+      owner1_fullname:       val('s9-fullname'),
+      owner1_dob:            val('s9-dob'),
+      owner1_nationality:    val('s9-nationality'),
+      owner1_address:        val('s9-address'),
+      owner1_shareholding:   val('s9-shareholding'),
+      owner2_title:          val('s10-title'),
+      owner2_fullname:       val('s10-fullname'),
+      owner2_dob:            val('s10-dob'),
+      owner2_nationality:    val('s10-nationality'),
+      owner2_address:        val('s10-address'),
+      owner2_shareholding:   val('s10-shareholding'),
+      owner3_title:          val('s11-title'),
+      owner3_fullname:       val('s11-fullname'),
+      owner3_dob:            val('s11-dob'),
+      owner3_nationality:    val('s11-nationality'),
+      owner3_address:        val('s11-address'),
+      owner3_shareholding:   val('s11-shareholding'),
+      owner4_title:          val('s12-title'),
+      owner4_fullname:       val('s12-fullname'),
+      owner4_dob:            val('s12-dob'),
+      owner4_nationality:    val('s12-nationality'),
+      owner4_address:        val('s12-address'),
+      owner4_shareholding:   val('s12-shareholding'),
+
+      // Additional users
+      num_additional_users:  numUsers,
+      user1_title:           val('s14-title'),
+      user1_fullname:        val('s14-fullname'),
+      user1_dob:             val('s14-dob'),
+      user1_nationality:     val('s14-nationality'),
+      user1_email:           val('s14-email'),
+      user2_title:           val('s15-title'),
+      user2_fullname:        val('s15-fullname'),
+      user2_dob:             val('s15-dob'),
+      user2_nationality:     val('s15-nationality'),
+      user2_email:           val('s15-email'),
+
+      // Account usage
+      base_currency:         clientType === 'corporate' ? val('s16-basecurrency') : val('s17-basecurrency'),
+      currencies_to_trade:   clientType === 'corporate' ? val('s16-currencies') : val('s17-currencies'),
+      monthly_volume:        clientType === 'corporate' ? val('s16-monthlyvolume') : val('s17-monthlyvolume'),
+      tx_per_month:          clientType === 'corporate' ? val('s16-txcount') : val('s17-txcount'),
+      fund_origin:           clientType === 'corporate' ? val('s16-fundorigin') : val('s17-fundorigin'),
+      payment_destination:   clientType === 'corporate' ? val('s16-destination') : val('s17-destination'),
+      source_of_funds:       clientType === 'corporate' ? getSOF('s16') : getSOF('s17'),
+      account_purpose:       clientType === 'corporate' ? val('s16-purpose') : val('s17-purpose'),
+
+      // Third party payments
+      third_party_details:   val('s18-thirdparty'),
+
+      // Terms accepted
+      terms_accepted:        document.getElementById('s20-terms').checked,
+
+      submitted_at:          new Date().toISOString()
+    };
+
+    try {
+      const { error } = await supabase.from('onboarding_submissions').insert([payload]);
+      if (error) throw error;
+      showScreen('scr-thankyou');
+    } catch (err) {
+      console.error('Submission error:', err);
+      loadingEl.style.display = 'none';
+      errorEl.style.display = 'block';
+    }
+  }
+
+</script>
+</body>
+</html>
