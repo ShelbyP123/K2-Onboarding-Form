@@ -1322,6 +1322,21 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
     try {
       if (!dbClient) throw new Error('Supabase not configured. Please add your credentials.');
+
+      // Upload the document file if one was selected
+      var fileInput = document.getElementById('s19-file');
+      var file = fileInput.files[0];
+      var filePath = '';
+
+      if (file) {
+        var fileName = Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        var uploadResult = await dbClient.storage.from('documents').upload(fileName, file);
+        if (uploadResult.error) throw uploadResult.error;
+        filePath = uploadResult.data.path;
+      }
+
+      payload.document_path = filePath;
+
       var result = await dbClient.from('onboarding_submissions').insert([payload]);
       if (result.error) throw result.error;
       showScreen('scr-thankyou');
