@@ -156,6 +156,25 @@
     .err { color: #c0392b; font-size: 0.85rem; margin-top: 6px; display: none; }
     #submit-error { color: #c0392b; font-size: 0.9rem; margin-top: 12px; display: none; }
     #submit-loading { font-size: 0.9rem; margin-top: 12px; display: none; opacity: 0.65; }
+    #review-summary { margin: 8px 0 28px; }
+    .review-section { margin-bottom: 24px; }
+    .review-section h3 {
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; opacity: 0.55; margin-bottom: 10px;
+      border-bottom: 1.5px solid rgba(38,38,38,0.15); padding-bottom: 6px;
+    }
+    .review-row {
+      display: flex; justify-content: space-between; gap: 16px;
+      padding: 8px 0; border-bottom: 1px solid rgba(38,38,38,0.08);
+      font-size: 0.92rem; line-height: 1.5;
+    }
+    .review-row:last-child { border-bottom: none; }
+    .review-label { opacity: 0.6; flex: 0 0 45%; }
+    .review-value { flex: 1; text-align: right; font-weight: 500; word-break: break-word; }
+    @media (max-width: 480px) {
+      .review-row { flex-direction: column; gap: 2px; }
+      .review-value { text-align: left; }
+    }
     #scr-thankyou { align-items: center; text-align: center; }
     #scr-thankyou .logo-wrap { margin-bottom: 40px; }
     #scr-thankyou .logo-wrap img { width: 160px; max-width: 70vw; }
@@ -372,8 +391,8 @@
 
 <!-- S6 — Director Details 1 -->
 <div id="scr-s6" class="screen">
-  <p class="section-title">Director Details</p>
-  <p class="section-desc">We usually need details for two company directors. If you are a director, please give details for one other director. If you selected 'sole director' and that person is not you, please enter their details here.</p>
+  <p class="section-title" id="s6-title-heading">Director Details</p>
+  <p class="section-desc" id="s6-desc-text">We usually need details for two company directors. If you are a director, please give details for one other director. If you selected 'sole director' and that person is not you, please enter their details here.</p>
   <div class="field-group">
     <label>Title *</label>
     <select id="s6-title">
@@ -411,51 +430,25 @@
   </div>
 </div>
 
-<!-- S7 — Director Details 2 -->
-<div id="scr-s7" class="screen">
-  <p class="section-title">Director Details (Second Director)</p>
-  <p class="section-desc">Please provide details for the second company director.</p>
-  <div class="field-group">
-    <label>Title *</label>
-    <select id="s7-title">
-      <option value="">Please select</option>
-      <option>Mr</option><option>Mrs</option><option>Miss</option><option>Ms</option><option>Dr</option><option>Lord</option><option>Other</option>
-    </select>
-    <div class="err" id="err-s7-title">Please select a title.</div>
-  </div>
-  <div class="field-group">
-    <label>Full Name *</label>
-    <input type="text" id="s7-fullname" placeholder="Director's full legal name" />
-    <div class="err" id="err-s7-fullname">Please enter the director's full name.</div>
-  </div>
-  <div class="field-group">
-    <label>Date of Birth *</label>
-    <input type="date" id="s7-dob" />
-    <div class="err" id="err-s7-dob">Please enter the director's date of birth.</div>
-  </div>
-  <div class="field-group">
-    <label>Nationality *</label>
-    <select id="s7-nationality">
-      <option value="">Please select</option>
-      <option>Afghan</option><option>Albanian</option><option>American</option><option>Australian</option><option>Austrian</option><option>Belgian</option><option>Brazilian</option><option>British</option><option>Bulgarian</option><option>Canadian</option><option>Chilean</option><option>Chinese</option><option>Colombian</option><option>Croatian</option><option>Cuban</option><option>Cypriot</option><option>Czech</option><option>Danish</option><option>Dutch</option><option>Egyptian</option><option>Emirati</option><option>Estonian</option><option>Finnish</option><option>French</option><option>German</option><option>Greek</option><option>Hungarian</option><option>Icelandic</option><option>Indian</option><option>Indonesian</option><option>Iranian</option><option>Iraqi</option><option>Irish</option><option>Israeli</option><option>Italian</option><option>Japanese</option><option>Jordanian</option><option>Kenyan</option><option>Korean</option><option>Kuwaiti</option><option>Latvian</option><option>Lebanese</option><option>Lithuanian</option><option>Malaysian</option><option>Maltese</option><option>Mexican</option><option>Moroccan</option><option>Nigerian</option><option>Norwegian</option><option>Omani</option><option>Pakistani</option><option>Filipino</option><option>Polish</option><option>Portuguese</option><option>Qatari</option><option>Romanian</option><option>Russian</option><option>Saudi</option><option>Serbian</option><option>Singaporean</option><option>Slovak</option><option>Slovenian</option><option>South African</option><option>Spanish</option><option>Sri Lankan</option><option>Swedish</option><option>Swiss</option><option>Thai</option><option>Turkish</option><option>Ukrainian</option><option>Venezuelan</option><option>Vietnamese</option><option>Zimbabwean</option>
-    </select>
-    <div class="err" id="err-s7-nationality">Please select a nationality.</div>
-  </div>
-  <div class="field-group">
-    <label>Residential Address *</label>
-    <input type="text" id="s7-address" placeholder="Full address including postcode" />
-    <div class="err" id="err-s7-address">Please enter the director's residential address.</div>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-outline" onclick="showScreen('scr-s6')">Back</button>
-    <button class="btn" onclick="submitS7()">Next</button>
-  </div>
-</div><!-- S8 — Ownership -->
+<!-- S8 — Ownership -->
 <div id="scr-s8" class="screen">
   <p class="section-title">Ownership</p>
   <p class="section-desc">We also need to understand the ownership structure of the business. Specifically, we are required to identify any individuals who own twenty-five percent or more of the company. If there are no individuals above this threshold, you can simply confirm that.</p>
   <div class="field-group">
-    <label>How many individuals own 25% or more of the company? *</label>
+    <label>Do you personally own 25% or more of the company? *</label>
+    <div class="choices">
+      <button class="choice-btn" id="s8-selfowner-yes" onclick="pickRadio('s8-selfowner','yes')">Yes</button>
+      <button class="choice-btn" id="s8-selfowner-no" onclick="pickRadio('s8-selfowner','no')">No</button>
+    </div>
+    <div class="err" id="err-s8-selfowner">Please select an option.</div>
+  </div>
+  <div class="field-group" id="s8-selfowner-pct-group" style="display:none;">
+    <label>What percentage do you personally own? *</label>
+    <input type="text" id="s8-selfowner-pct" placeholder="e.g. 30%" />
+    <div class="err" id="err-s8-selfowner-pct">Please enter your percentage of ownership.</div>
+  </div>
+  <div class="field-group">
+    <label>How many other individuals (not including yourself) own 25% or more of the company? *</label>
     <div class="choices">
       <button class="choice-btn" id="s8-owners-0" onclick="pickRadio('s8-owners','0')">0</button>
       <button class="choice-btn" id="s8-owners-1" onclick="pickRadio('s8-owners','1')">1</button>
@@ -914,9 +907,9 @@
 
 <!-- SUBMIT SCREEN -->
 <div id="scr-submit" class="screen statement-screen">
-  <h2>Almost There</h2>
-  <p>Thank you for completing the form. Please review your details before submitting. Once you click Submit, your application will be sent to the K2 FX team for review.</p>
-  <p>If you need to go back and make any changes, use the Back button below.</p>
+  <h2>Review Your Answers</h2>
+  <p>Please check the summary below before submitting. Once you click Submit, your application will be sent to the K2 FX team for review. If anything needs changing, use the Back button to return through the form.</p>
+  <div id="review-summary"></div>
   <div id="submit-loading">Submitting your application, please wait...</div>
   <div id="submit-error">There was a problem submitting your form. Please try again or contact us directly.</div>
   <div class="btn-row">
@@ -933,11 +926,23 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
 
   // ── IMPORTANT: Replace the two lines below with your real Supabase credentials ──
   const SUPABASE_URL = 'https://aswdltfcqweesedaxdle.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzd2RsdGZjcXdlZXNlZGF4ZGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NDY1MzUsImV4cCI6MjA5NTUyMjUzNX0.cQyyTZzQxghanhNP7AXwFzis40sbxJ3ypEBu4ewAZtI';
+
+  // ── IMPORTANT: Replace with your real EmailJS values (see the step-by-step guide) ──
+  const EMAILJS_PUBLIC_KEY  = 'YOUR_EMAILJS_PUBLIC_KEY';
+  const EMAILJS_SERVICE_ID  = 'YOUR_EMAILJS_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID';
+
+  try {
+    if (window.emailjs) window.emailjs.init(EMAILJS_PUBLIC_KEY);
+  } catch(e) {
+    console.warn('EmailJS not initialised:', e.message);
+  }
 
   // Safe initialisation — won't crash the page if credentials are still placeholders
   let dbClient = null;
@@ -953,11 +958,12 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
   let isDirector = '';
   let numOwners = 0;
   let numUsers = 0;
+  let selfOwns25 = '';
 
   // ── Screen list for progress bar ──
   const allScreens = [
     'scr-welcome','scr-s1','scr-q1',
-    'scr-s2','scr-s3','scr-s4','scr-s5','scr-s6','scr-s7','scr-s8',
+    'scr-s2','scr-s3','scr-s4','scr-s5','scr-s6','scr-s8',
     'scr-s9','scr-s10','scr-s11','scr-s12',
     'scr-s13','scr-s14','scr-s15',
     'scr-s16','scr-s17','scr-s18','scr-s19','scr-s20',
@@ -1002,6 +1008,11 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
     if (name === 's5-numdirectors') {
       numDirectors = value;
       document.getElementById('err-s5-numdirectors').style.display = 'none';
+    }
+    if (name === 's8-selfowner') {
+      selfOwns25 = value;
+      document.getElementById('s8-selfowner-pct-group').style.display = (value === 'yes') ? 'block' : 'none';
+      document.getElementById('err-s8-selfowner').style.display = 'none';
     }
     if (name === 's8-owners') {
       numOwners = parseInt(value);
@@ -1089,8 +1100,21 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
       ok = false;
     } else { hide('err-s5-numdirectors'); }
     if (!ok) return;
-    if (isDirector === 'yes' && numDirectors === 'sole') showScreen('scr-s8');
-    else showScreen('scr-s6');
+    if (isDirector === 'yes' && numDirectors === 'sole') {
+      showScreen('scr-s8');
+      return;
+    }
+    // Set the S6 heading/description depending on how the user got here.
+    if (isDirector === 'yes' && numDirectors === 'more') {
+      document.getElementById('s6-title-heading').textContent = 'Secondary Director Details';
+      document.getElementById('s6-desc-text').textContent =
+        'We usually need details for two company directors. If you are a director, please give details for one other director.';
+    } else {
+      document.getElementById('s6-title-heading').textContent = 'Director Details';
+      document.getElementById('s6-desc-text').textContent =
+        "We usually need details for two company directors. If you are a director, please give details for one other director. If you selected 'sole director' and that person is not you, please enter their details here.";
+    }
+    showScreen('scr-s6');
   }
 
   function submitS6() {
@@ -1101,27 +1125,26 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
     ok = chk('s6-nationality','err-s6-nationality') & ok;
     ok = chk('s6-address','err-s6-address') & ok;
     if (!ok) return;
-    if (numDirectors === 'more') showScreen('scr-s7');
-    else showScreen('scr-s8');
-  }
-
-  function submitS7() {
-    var ok = true;
-    ok = chk('s7-title','err-s7-title') & ok;
-    ok = chk('s7-fullname','err-s7-fullname') & ok;
-    ok = chk('s7-dob','err-s7-dob') & ok;
-    ok = chk('s7-nationality','err-s7-nationality') & ok;
-    ok = chk('s7-address','err-s7-address') & ok;
-    if (ok) showScreen('scr-s8');
+    showScreen('scr-s8');
   }
 
   function goBackFromS8() {
     if (isDirector === 'yes' && numDirectors === 'sole') showScreen('scr-s5');
-    else if (numDirectors === 'more') showScreen('scr-s7');
     else showScreen('scr-s6');
   }
 
   function submitS8() {
+    var ok = true;
+    if (!selfOwns25) {
+      document.getElementById('err-s8-selfowner').style.display = 'block';
+      ok = false;
+    } else { hide('err-s8-selfowner'); }
+    if (selfOwns25 === 'yes') {
+      ok = chk('s8-selfowner-pct','err-s8-selfowner-pct') & ok;
+    } else {
+      hide('err-s8-selfowner-pct');
+    }
+    if (!ok) return;
     if (document.querySelectorAll('[id^="s8-owners-"].selected').length === 0) {
       document.getElementById('err-s8-owners').style.display = 'block';
       return;
@@ -1253,7 +1276,118 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
       return;
     }
     hide('err-s20-terms');
+    renderReviewSummary();
     showScreen('scr-submit');
+  }
+
+  // ── SOURCE OF FUNDS HELPER (shared by the review screen and final submit) ──
+  function getSOF(prefix) {
+    var items = [];
+    if (document.getElementById(prefix+'-sof-business').checked) items.push('Business income');
+    if (document.getElementById(prefix+'-sof-savings').checked) items.push('Personal savings');
+    if (document.getElementById(prefix+'-sof-investment').checked) items.push('Investment proceeds');
+    if (document.getElementById(prefix+'-sof-assets').checked) items.push('Sale of assets');
+    if (document.getElementById(prefix+'-sof-other').checked) items.push('Other');
+    return items.join(', ');
+  }
+
+  // ── REVIEW SCREEN ──
+  function yn(val) { return val === 'yes' ? 'Yes' : (val === 'no' ? 'No' : '—'); }
+
+  function reviewRow(label, value) {
+    var display = (value === undefined || value === null || value === '') ? '—' : value;
+    return '<div class="review-row"><span class="review-label">' + label + '</span>' +
+           '<span class="review-value">' + display + '</span></div>';
+  }
+
+  function reviewSection(title, rowsHtml) {
+    return '<div class="review-section"><h3>' + title + '</h3>' + rowsHtml + '</div>';
+  }
+
+  function renderReviewSummary() {
+    var html = '';
+
+    html += reviewSection('Client Type',
+      reviewRow('Type of Client', clientType === 'corporate' ? 'Corporate Client' : 'Private Client')
+    );
+
+    var aPrefix = clientType === 'corporate' ? 's2' : 's3';
+    html += reviewSection('Applicant Details',
+      reviewRow('Title', v(aPrefix + '-title')) +
+      reviewRow('Full Legal Name', v(aPrefix + '-fullname')) +
+      reviewRow('Date of Birth', v(aPrefix + '-dob')) +
+      reviewRow('Nationality', v(aPrefix + '-nationality')) +
+      reviewRow('Residential Address', v(aPrefix + '-address')) +
+      reviewRow('Email Address', v(aPrefix + '-email')) +
+      reviewRow('Mobile Number', v(aPrefix + '-mobile'))
+    );
+
+    if (clientType === 'corporate') {
+      html += reviewSection('Company Details',
+        reviewRow('Registered Company Name', v('s4-companyname')) +
+        reviewRow('Country of Incorporation', v('s4-country')) +
+        reviewRow('Company Registration Number', v('s4-regnumber')) +
+        reviewRow('Business Sector', v('s4-sector')) +
+        reviewRow('Company Website', v('s4-website'))
+      );
+
+      var directorRows = reviewRow('Registered Company Director?', yn(isDirector));
+      if (isDirector === 'yes') {
+        directorRows += reviewRow('How Many Directors', numDirectors === 'sole' ? 'Sole Director' : 'More Than One');
+      }
+      if (!(isDirector === 'yes' && numDirectors === 'sole')) {
+        directorRows +=
+          reviewRow('Director Full Name', v('s6-fullname')) +
+          reviewRow('Director Date of Birth', v('s6-dob')) +
+          reviewRow('Director Nationality', v('s6-nationality')) +
+          reviewRow('Director Address', v('s6-address'));
+      }
+      html += reviewSection('Directors', directorRows);
+
+      var ownerRows = reviewRow('Do You Personally Own 25%+?', yn(selfOwns25));
+      if (selfOwns25 === 'yes') {
+        ownerRows += reviewRow('Your Ownership Percentage', v('s8-selfowner-pct'));
+      }
+      ownerRows += reviewRow('Other Individuals Owning 25%+', String(numOwners));
+      for (var i = 1; i <= numOwners; i++) {
+        var op = 's' + (8 + i); // owner 1 -> s9, owner 2 -> s10, etc.
+        ownerRows +=
+          reviewRow('Owner ' + i + ' Full Name', v(op + '-fullname')) +
+          reviewRow('Owner ' + i + ' Shareholding', v(op + '-shareholding'));
+      }
+      html += reviewSection('Ownership', ownerRows);
+
+      var userRows = reviewRow('Additional Users Required', String(numUsers));
+      for (var u = 1; u <= numUsers; u++) {
+        var up = (u === 1) ? 's14' : 's15';
+        userRows +=
+          reviewRow('User ' + u + ' Full Name', v(up + '-fullname')) +
+          reviewRow('User ' + u + ' Email', v(up + '-email'));
+      }
+      html += reviewSection('Additional Users', userRows);
+    }
+
+    var uPrefix = clientType === 'corporate' ? 's16' : 's17';
+    html += reviewSection('Account Usage',
+      reviewRow('Base Currency', v(uPrefix + '-basecurrency')) +
+      reviewRow('Currencies to Trade', v(uPrefix + '-currencies')) +
+      reviewRow('Estimated Monthly Volume', v(uPrefix + '-monthlyvolume')) +
+      reviewRow('Estimated Transactions / Month', v(uPrefix + '-txcount')) +
+      reviewRow('Origin of Funds', v(uPrefix + '-fundorigin')) +
+      reviewRow('Destination of Payments', v(uPrefix + '-destination')) +
+      reviewRow('Source of Funds', getSOF(uPrefix)) +
+      reviewRow('Purpose of Account', v(uPrefix + '-purpose'))
+    );
+
+    var fileInput = document.getElementById('s19-file');
+    var fileName = (fileInput && fileInput.files[0]) ? fileInput.files[0].name : 'No file uploaded';
+    html += reviewSection('Other',
+      reviewRow('Third Party Payments', v('s18-thirdparty') || 'None') +
+      reviewRow('Uploaded Document', fileName) +
+      reviewRow('Terms Accepted', document.getElementById('s20-terms').checked ? 'Yes' : 'No')
+    );
+
+    document.getElementById('review-summary').innerHTML = html;
   }
 
   function handleFileSelect() {
@@ -1269,16 +1403,6 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
     var errorEl = document.getElementById('submit-error');
     loadingEl.style.display = 'block';
     errorEl.style.display = 'none';
-
-    function getSOF(prefix) {
-      var items = [];
-      if (document.getElementById(prefix+'-sof-business').checked) items.push('Business income');
-      if (document.getElementById(prefix+'-sof-savings').checked) items.push('Personal savings');
-      if (document.getElementById(prefix+'-sof-investment').checked) items.push('Investment proceeds');
-      if (document.getElementById(prefix+'-sof-assets').checked) items.push('Sale of assets');
-      if (document.getElementById(prefix+'-sof-other').checked) items.push('Other');
-      return items.join(', ');
-    }
 
     var payload = {
       client_type:           clientType,
@@ -1306,6 +1430,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
       director2_dob:         v('s7-dob'),
       director2_nationality: v('s7-nationality'),
       director2_address:     v('s7-address'),
+      self_owns_25pct:       selfOwns25,
+      self_ownership_pct:    selfOwns25 === 'yes' ? v('s8-selfowner-pct') : '',
       num_beneficial_owners: numOwners,
       owner1_title:          v('s9-title'),
       owner1_fullname:       v('s9-fullname'),
@@ -1374,6 +1500,23 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
       var result = await dbClient.from('onboarding_submissions').insert([payload]);
       if (result.error) throw result.error;
+
+      // Notify the K2 FX team by email. Wrapped so an email problem never blocks
+      // a successful submission — the application has already been saved above.
+      try {
+        if (window.emailjs) {
+          await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            client_type:        payload.client_type,
+            applicant_fullname: payload.applicant_fullname,
+            applicant_email:    payload.applicant_email,
+            company_name:       payload.company_name || 'N/A (private client)',
+            submitted_at:       payload.submitted_at
+          });
+        }
+      } catch (emailErr) {
+        console.warn('Submission saved, but the team notification email failed to send:', emailErr.message);
+      }
+
       showScreen('scr-thankyou');
     } catch(err) {
       console.error('Submission error:', err);
